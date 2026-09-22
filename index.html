@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Живая карта происхождения казахского народа: от саков до Казахского ханства 1465 года.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%23121316%27/%3E%3Ccircle cx=%2732%27 cy=%2732%27 r=%2714%27 fill=%27%23E3B04B%27/%3E%3C/svg%3E">
+<title>Дорога к 1465</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;0,800;1,500&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{
+  color-scheme:dark;
+  --ground:#121316; --ground2:#16171B; --panel:#1B1D22; --land:#202329; --kz:#24272E; --line:#2E3139;
+  --text:#EDEBE6; --muted:#A3A6AE; --faint:#71757F; --gold:#E3B04B; --gold2:#F0CE82; --acc:#D9A04A; --sky:#E3B04B;
+  --display:"Alegreya", Georgia, "Times New Roman", serif;
+  --body:"Golos Text", "Segoe UI", Roboto, Arial, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+*{box-sizing:border-box}
+html,body{background:var(--ground)}
+body{margin:0;color:var(--text);font-family:var(--body);font-size:17px;line-height:1.55;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, #121316 0%, transparent 60%),
+    radial-gradient(900px 500px at 0% 30%, #121316 0%, transparent 60%),
+    var(--ground);}
+a{color:var(--gold2)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1360px;margin:0 auto;padding-inline:24px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(18,19,22,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px}
+.brand{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:.2px;color:var(--text);text-decoration:none}
+.brand span{color:var(--sky)}
+nav.links{display:flex;gap:6px;flex-wrap:wrap}
+nav.links a{color:var(--muted);text-decoration:none;font-size:14px;padding:6px 12px;border-radius:999px;border:1px solid transparent}
+nav.links a:hover{color:var(--text);border-color:var(--line)}
+.eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--sky)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+h2{font-size:clamp(34px,4.4vw,56px);line-height:1.05;font-weight:800}
+h3{font-size:24px;font-weight:700;line-height:1.2}
+p{margin:0}
+.lead{color:var(--muted);font-size:19px;max-width:62ch}
+
+/* ===== HERO / MAP ===== */
+.hero{padding-block:28px 12px}
+.hero-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:18px}
+.hero-head h1{font-size:clamp(36px,4.8vw,64px);line-height:.98;font-weight:800}
+.hero-head h1 em{font-style:italic;font-weight:500;color:var(--gold2)}
+.hero-head .lead{max-width:44ch;font-size:17px}
+.stage{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(320px,1fr);gap:18px;align-items:stretch}
+.mapbox{position:relative;background:linear-gradient(180deg,#17181C,#131417);border:1px solid var(--line);transition:box-shadow .8s,border-color .8s;border-radius:18px;overflow:hidden}
+.mapbox svg{display:block;width:100%;height:auto}
+.era-stamp{position:absolute;left:22px;top:18px;pointer-events:none}
+.era-stamp .yrs{font-family:var(--mono);font-size:14px;color:var(--acc);transition:color .8s;letter-spacing:.06em}
+.era-stamp .ttl{font-family:var(--display);font-size:clamp(26px,3.4vw,46px);font-weight:800;line-height:1;margin-top:4px;text-shadow:0 2px 18px rgba(0,0,0,.6)}
+.legend-note{position:absolute;left:16px;right:16px;bottom:10px;display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:flex-end;font-size:12px;color:var(--muted);pointer-events:none}
+.legend-note span{display:inline-flex;align-items:center;gap:6px}
+.legend-note i{display:inline-block;width:20px;height:0}
+.lg-kz{border-top:2px solid var(--gold)}
+.lg-river{border-top:2px solid #6F93B5}
+.lg-arrow{border-top:2px dashed #D6D3CC}
+.panel{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--acc);transition:border-color .8s;border-radius:18px;padding:22px 22px 20px;display:flex;flex-direction:column;gap:16px;min-height:100%}
+.panel .who{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;font-size:14px;padding:5px 12px 5px 9px;border-radius:999px;background:#23262C;border:1px solid var(--line)}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block;box-shadow:0 0 10px currentColor}
+.panel .txt{font-size:17.5px;line-height:1.55}
+.panel h4{margin:0 0 6px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.src{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
+.src li{font-size:15px;color:#D6D3CC;padding-left:18px;position:relative}
+.src li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:7px;border:1.5px solid var(--gold);transform:rotate(45deg)}
+.gauge{position:relative;height:12px;border-radius:999px;background:linear-gradient(90deg,#C9824A,#5E7FB8);margin:10px 0 6px}
+.gauge .dot{position:absolute;top:50%;width:22px;height:22px;border-radius:50%;background:#FFF6DA;border:3px solid #121316;box-shadow:0 0 0 2px #FFF6DA,0 0 18px rgba(255,246,218,.7);transform:translate(-50%,-50%);transition:left 1.2s cubic-bezier(.6,.1,.2,1)}
+.gauge-lbl{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.dna-txt{font-size:15px;color:#D6D3CC;margin-top:6px}
+.fade{transition:opacity .45s ease, transform .45s ease}
+.fade.out{opacity:0;transform:translateY(6px)}
+
+.controls{display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap}
+.btn{appearance:none;border:1px solid var(--line);background:#22252B;color:var(--text);font:600 15px var(--body);padding:10px 16px;border-radius:12px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{border-color:var(--gold)}
+.btn.primary{background:var(--gold);color:#16130A;border-color:var(--gold)}
+.btn.primary:hover{filter:brightness(1.12)}
+.kbd{font-family:var(--mono);font-size:12px;color:var(--faint)}
+.timeline{position:relative;margin-top:14px;display:grid;grid-template-columns:repeat(8,1fr);gap:0}
+.timeline::before{content:"";position:absolute;left:0;right:0;top:15px;height:2px;background:var(--line)}
+.timeline .fill{position:absolute;left:0;top:15px;height:2px;background:var(--gold);width:0;transition:width .6s ease}
+.tstop{position:relative;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px;text-align:center;font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+.tstop .pip{display:block;flex:none;width:14px;height:14px;margin:9px 0 10px;border-radius:50%;background:var(--ground);border:2px solid var(--line);position:relative;z-index:1;transition:all .3s}
+.tstop .nm{display:block;font-family:var(--display);font-weight:700;font-size:16px;color:var(--text);line-height:1.15;transition:color .4s}
+.tstop .dt{display:block;font-family:var(--mono);font-size:11px;line-height:1.35;margin-top:4px;color:var(--faint)}
+.tstop.done .pip{background:var(--gold);border-color:var(--gold)}
+.tstop.on .pip{background:var(--gold);border-color:var(--gold);box-shadow:0 0 0 6px rgba(227,176,75,.18);transform:scale(1.15)}
+.tstop.on .nm{color:var(--gold)}
+.progress{height:3px;background:#23262C;border-radius:3px;overflow:hidden;margin-top:12px}
+.progress i{display:block;height:100%;width:0;background:var(--gold)}
+
+/* map layers */
+.region{transition:opacity 1.1s ease}
+.rlabel{font-family:var(--display);font-weight:700;font-size:19px;fill:#F4F1EA;paint-order:stroke;stroke:#121316;stroke-width:4px;stroke-linejoin:round;transition:opacity .9s ease;letter-spacing:.2px}
+.wlabel{font-family:var(--body);font-style:italic;font-size:12px;fill:#8FAECB;paint-order:stroke;stroke:#121316;stroke-width:3px;stroke-linejoin:round;letter-spacing:.3px}
+.alabel{font-family:var(--body);font-weight:600;font-size:13.5px;paint-order:stroke;stroke:#121316;stroke-width:4px;stroke-linejoin:round}
+.plabel{font-family:var(--body);font-size:13px;fill:#E7E4DD;paint-order:stroke;stroke:#121316;stroke-width:3.5px;stroke-linejoin:round}
+.place{transition:opacity .8s ease}
+.place .ring{transform-box:fill-box;transform-origin:center;animation:ping 2.2s ease-out infinite}
+@keyframes ping{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+.arrow{fill:none;stroke-width:3.2;stroke-linecap:round;transition:opacity .6s}
+.arrow.draw{animation:draw 2.6s cubic-bezier(.5,.1,.2,1) forwards}
+@keyframes draw{from{stroke-dashoffset:var(--len)}to{stroke-dashoffset:0}}
+.flow{stroke-dasharray:4 14;animation:flow 1.2s linear infinite;fill:none;stroke-width:2;opacity:.7}
+@keyframes flow{to{stroke-dashoffset:-18}}
+
+/* ===== SECTIONS ===== */
+section.block{padding-block:84px 24px}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:end;margin-bottom:34px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}
+.card h3{margin-bottom:10px}
+.card p{color:#D6D3CC}
+.card .tag{font-family:var(--mono);font-size:12px;color:var(--sky);letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:10px}
+
+.hist{position:relative;margin-top:26px}
+.hist-row{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:22px 0;position:relative}
+.hist-row::before{content:"";position:absolute;left:0;right:0;top:33px;height:2px;background:var(--line)}
+.hstop{padding-right:14px}
+.hstop .yr{font-family:var(--mono);font-size:13px;color:var(--sky);display:block;height:24px}
+.hstop .pp{display:block;width:12px;height:12px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px rgba(227,176,75,.15);margin:3px 0 14px}
+.hstop b{display:block;font-family:var(--display);font-size:19px;line-height:1.15;margin-bottom:4px}
+.hstop small{display:block;color:var(--muted);font-size:14px;line-height:1.45}
+
+.versus{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch;margin-top:26px}
+.versus .card{border-radius:16px}
+.versus .mid{display:flex;align-items:center;justify-content:center;padding:0 14px;font-family:var(--display);font-style:italic;font-size:22px;color:var(--gold)}
+.synth{margin-top:18px;border:1px solid var(--gold);background:linear-gradient(90deg,rgba(227,176,75,.10),rgba(227,176,75,.02));border-radius:16px;padding:20px 22px;display:flex;gap:18px;align-items:center}
+.synth .big{font-family:var(--display);font-size:28px;font-weight:800;color:var(--gold2);white-space:nowrap}
+
+/* genetics */
+.stack{display:flex;height:64px;border-radius:14px;overflow:hidden;border:1px solid var(--line);margin-top:8px}
+.stack div{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:14px;color:#10131A;min-width:0;white-space:nowrap;overflow:hidden}
+.hg-legend{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 18px;margin-top:18px}
+.hg{display:flex;gap:10px;align-items:flex-start}
+.hg i{flex:none;width:14px;height:14px;border-radius:4px;margin-top:5px}
+.hg b{font-family:var(--mono);font-size:15px}
+.hg span{display:block;color:var(--muted);font-size:14px;line-height:1.4}
+.split{display:flex;height:44px;border-radius:12px;overflow:hidden;margin:12px 0 8px}
+.split div{display:flex;align-items:center;padding-inline:14px;font-family:var(--mono);font-weight:700;font-size:14px;color:#10131A}
+.caption{font-size:13px;color:var(--faint);margin-top:10px}
+.clans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:8px}
+.clan{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+.clan b{font-family:var(--display);font-size:21px}
+.clan .pc{font-family:var(--mono);font-size:24px;font-weight:700;text-align:right}
+.clan small{color:var(--muted);font-size:13.5px}
+.clan .bar{grid-column:1/-1;height:6px;border-radius:3px;background:#23262C;overflow:hidden;margin-top:8px}
+.clan .bar i{display:block;height:100%}
+.story{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
+.story .ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:18px;color:#10131A}
+.verdict{display:inline-block;margin-top:12px;font-size:13.5px;font-weight:600;padding:4px 10px;border-radius:999px}
+
+/* finale */
+.finale{padding-block:90px 40px;text-align:left}
+.formula{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:26px;overflow-x:auto}
+.formula svg{display:block;width:100%;min-width:760px;height:auto}
+.ftxt{font-family:var(--body);font-size:16px;fill:#E7E4DD}
+.fname{font-family:var(--display);font-weight:800;font-size:23px}
+.qazaq{font-family:var(--display);font-weight:800;font-size:64px;fill:var(--gold2)}
+.closing{font-family:var(--display);font-size:clamp(26px,3vw,38px);line-height:1.25;max-width:30ch;margin-top:34px}
+.closing em{color:var(--gold2)}
+footer{border-top:1px solid var(--line);margin-top:70px;padding-block:28px 50px;color:var(--muted);font-size:14px}
+footer ol{padding-left:18px;margin:10px 0 0;display:grid;gap:4px}
+
+@media (max-width:1020px){
+  .hist-row{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .hist-row::before{display:none}
+  .stage{grid-template-columns:1fr}
+  .sec-head{grid-template-columns:1fr}
+  .grid3,.clans{grid-template-columns:1fr 1fr}
+  .hg-legend{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .wrap{padding-inline:16px}
+  nav.links{display:none}
+  .grid3,.grid2,.clans,.hg-legend{grid-template-columns:1fr}
+  .hist-row{grid-template-columns:1fr 1fr}
+  .timeline{grid-template-columns:repeat(8,minmax(0,1fr))}
+  .tstop .nm{font-size:0}
+  .tstop .dt{display:none}
+  .versus{grid-template-columns:1fr}
+  .versus .mid{padding:10px}
+  .synth{flex-direction:column;align-items:flex-start}
+  .rlabel{font-size:24px}
+  .legend-note{position:static;padding:8px 12px 10px;font-size:11px}
+  .era-stamp{left:14px;top:10px}
+  .era-stamp .ttl{font-size:24px}
+  .stack div{font-size:11px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#map">Дорога к <span>1465</span></a>
+    <nav class="links" aria-label="Разделы">
+      <a href="#map">Живая карта</a>
+      <a href="#sources">Источники</a>
+      <a href="#genes">Генетика</a>
+      <a href="#finale">Итог</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero wrap" id="map">
+  <div class="hero-head">
+    <div>
+      <div class="eyebrow">Генетическое происхождение казахской нации</div>
+      <h1>Как степь <em>сложилась</em><br>в один народ</h1>
+    </div>
+    <p class="lead">Двадцать веков на одной карте: какие народы жили на земле Казахстана, что о них пишут источники и какой след они оставили в ДНК казахов.</p>
+  </div>
+
+  <div class="stage">
+    <div>
+      <div class="mapbox">
+        <svg id="svg" viewBox="0 0 1000 640" role="img" aria-label="Карта Казахстана с народами выбранной эпохи">
+          <defs>
+            <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="9"/></filter>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <radialGradient id="vign" cx="50%" cy="45%" r="70%"><stop offset="60%" stop-color="#131417" stop-opacity="0"/><stop offset="100%" stop-color="#0B0C0E" stop-opacity=".85"/></radialGradient>
+            <clipPath id="landclip"><path id="landclipPath"/></clipPath>
+            <marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker>
+          </defs>
+          <rect width="1000" height="640" fill="#101114"/>
+          
+          <path id="land" fill="#24272D" stroke="#33363E" stroke-width=".8"/>
+          <g id="regions" clip-path="url(#landclip)"></g>
+          <path id="kz" fill="none" stroke="#E3B04B" stroke-width="1.6" stroke-opacity=".75" stroke-dasharray="1 0"/>
+          <path id="borders" fill="none" stroke="#3A3E47" stroke-width=".7"/>
+          <g id="lakes"></g>
+          <g id="rivers"></g>
+          <g id="waterlabels"></g>
+          <g id="arrows"></g>
+          <g id="labels"></g>
+          <g id="places"></g>
+          <rect width="1000" height="640" fill="url(#vign)" pointer-events="none"/>
+        </svg>
+        <div class="era-stamp" aria-live="polite"><div class="yrs fade" id="stampYrs"></div><div class="ttl fade" id="stampTtl"></div></div>
+        <div class="legend-note">
+          <span><i class="lg-kz"></i>границы Казахстана сегодня</span>
+          <span><i class="lg-river"></i>реки</span>
+          <span><i class="lg-arrow"></i>переселения и походы</span>
+          <span>области расселения приблизительны</span>
+        </div>
+      </div>
+      <div class="timeline" id="timeline" role="tablist" aria-label="Эпохи"><div class="fill" id="tfill"></div></div>
+      <div class="progress" aria-hidden="true"><i id="prog"></i></div>
+      <div class="controls">
+        <button class="btn" id="prev" aria-label="Предыдущая эпоха">←</button>
+        <button class="btn primary" id="play">▶ Запустить историю</button>
+        <button class="btn" id="next" aria-label="Следующая эпоха">→</button>
+        <span class="kbd">Клавиши: ← → переключают эпохи, пробел — пауза</span>
+      </div>
+    </div>
+
+    <aside class="panel" id="panel" aria-live="polite">
+      <div class="fade" id="pBody">
+        <div class="who" id="pWho"></div>
+        <p class="txt" id="pTxt" style="margin-top:14px"></p>
+      </div>
+      <div class="fade" id="pSrcWrap">
+        <h4>Что говорят источники</h4>
+        <ul class="src" id="pSrc"></ul>
+      </div>
+      <div>
+        <h4>След в ДНК</h4>
+        <div class="gauge"><span class="dot" id="gdot" style="left:15%"></span></div>
+        <div class="gauge-lbl"><span>Западная Евразия</span><span>Восточная Азия</span></div>
+        <p class="dna-txt fade" id="pDna"></p>
+        <p class="caption">Схема по данным древней ДНК степей (Damgaard et al., Nature, 2018).</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="block wrap" id="sources">
+  <div class="sec-head">
+    <div>
+      <div class="eyebrow">Часть 1 · Источники и историография</div>
+      <h2>Откуда мы знаем, кто такие казахи</h2>
+    </div>
+    <p class="lead">Историю народа собирают из трёх видов свидетельств: что написали современники, что передавали из уст в уста и что хранит земля.</p>
+  </div>
+
+  <div class="grid3">
+    <article class="card">
+      <span class="tag">Письменные</span>
+      <h3>Хроники и летописи</h3>
+      <p>Геродот о саках, китайские «Шицзи» и «Ханьшу» об усунях и канглы, «Джами ат-таварих» Рашид ад-Дина. Главный текст о 1465 годе — «Тарих-и Рашиди» Мухаммеда Хайдара Дулати.</p>
+    </article>
+    <article class="card">
+      <span class="tag">Устные</span>
+      <h3>Шежіре и эпос</h3>
+      <p>Родословные шежіре хранили память о предках на семь и более поколений. Эпосы и легенды об Алаше, Алаша-хане и трёх жузах объясняли, как роды связаны между собой.</p>
+    </article>
+    <article class="card">
+      <span class="tag">Материальные</span>
+      <h3>Археология и ДНК</h3>
+      <p>Курганы саков и усуней, Золотой человек из Иссыка, города Шёлкового пути. С XXI века к ним добавилась древняя и современная ДНК — «архив», записанный в самих людях.</p>
+    </article>
+  </div>
+
+  <h3 style="margin-top:54px">Как менялся взгляд историков</h3>
+  <div class="hist">
+    <div class="hist-row">
+      <div class="hstop"><span class="yr">XIV в.</span><span class="pp"></span><b>Рашид ад-Дин</b><small>Описал тюркские и монгольские племена, многие из которых вошли в состав казахов.</small></div>
+      <div class="hstop"><span class="yr">1546</span><span class="pp"></span><b>М. Х. Дулати</b><small>Первым рассказал, как Керей и Жанибек основали Казахское ханство.</small></div>
+      <div class="hstop"><span class="yr">1602</span><span class="pp"></span><b>К. Жалаири</b><small>«Сборник летописей» — первая история, написанная казахом-историком.</small></div>
+      <div class="hstop"><span class="yr">1832</span><span class="pp"></span><b>А. Левшин</b><small>Искал истоки казахов в древнетюркской эпохе.</small></div>
+      <div class="hstop"><span class="yr">XIX в.</span><span class="pp"></span><b>Ч. Валиханов</b><small>Относил сложение народа ко второй половине XIV века, опирался на шежіре.</small></div>
+      <div class="hstop"><span class="yr">1890-е</span><span class="pp"></span><b>Н. Аристов</b><small>Показал: в казахах соединились и тюркские, и более древние, дотюркские племена.</small></div>
+      <div class="hstop"><span class="yr">1930-е</span><span class="pp"></span><b>С. Асфендияров</b><small>Главное — территория, кочевое хозяйство и политика XVI века.</small></div>
+      <div class="hstop"><span class="yr">1990-е</span><span class="pp"></span><b>Н. Масанов</b><small>Связал этапы этногенеза с развитием кочевого образа жизни.</small></div>
+    </div>
+  </div>
+
+  <div class="versus">
+    <article class="card">
+      <span class="tag">Концепция 1</span>
+      <h3>Автохтонная</h3>
+      <p>Предки казахов жили здесь всегда: от андроновцев и саков через усуней и канглы к тюркам и кыпчакам. Народ вырос на месте.</p>
+    </article>
+    <div class="mid">или</div>
+    <article class="card">
+      <span class="tag">Концепция 2</span>
+      <h3>Миграционная</h3>
+      <p>Решающую роль сыграли волны пришельцев с востока — гунны, тюрки, монголы. Они принесли язык и родовые имена.</p>
+    </article>
+  </div>
+  <div class="synth">
+    <div class="big">Сегодня:</div>
+    <p>Большинство учёных считает, что правы обе стороны. Казахи — это синтез: местные степные племена и пришлые кочевники, соединённые общим языком, хозяйством и государством 1465 года. Генетика это подтверждает.</p>
+  </div>
+</section>
+
+<section class="block wrap" id="genes">
+  <div class="sec-head">
+    <div>
+      <div class="eyebrow">Часть 2 · Генетические корни</div>
+      <h2>Что записано в ДНК</h2>
+    </div>
+    <p class="lead">Y-хромосома передаётся от отца к сыну почти без изменений — как шежіре, только записанное в клетках. Её «ветви» учёные называют гаплогруппами.</p>
+  </div>
+
+  <article class="card">
+    <h3>Отцовские линии казахов</h3>
+    <p style="color:var(--muted)">Доля мужчин с каждой гаплогруппой, выборка 1171 человек.</p>
+    <div class="stack" role="img" aria-label="C2 51,9%, R 12,8%, O 8%, G 7,9%, N 6,9%, J 6,2%, Q 3,1%, другие 3,2%">
+      <div style="width:51.9%;background:#E3B04B">C2 · 51,9%</div>
+      <div style="width:12.8%;background:#C9824A">R · 12,8%</div>
+      <div style="width:8.0%;background:#5E7FB8">O · 8%</div>
+      <div style="width:7.9%;background:#B5566E">G · 7,9%</div>
+      <div style="width:6.9%;background:#6FA3B5">N · 6,9%</div>
+      <div style="width:6.2%;background:#8A7DB8">J · 6,2%</div>
+      <div style="width:3.1%;background:#6E9E72">Q</div>
+      <div style="width:3.2%;background:#4A4D55"></div>
+    </div>
+    <div class="hg-legend">
+      <div class="hg"><i style="background:#E3B04B"></i><div><b>C2</b><span>Восточная степь, Монголия, Южная Сибирь. Линия кочевых волн — тюрков и монголов.</span></div></div>
+      <div class="hg"><i style="background:#C9824A"></i><div><b>R</b><span>Древние степняки запада: андроновцы и саки.</span></div></div>
+      <div class="hg"><i style="background:#5E7FB8"></i><div><b>O</b><span>Восточная Азия.</span></div></div>
+      <div class="hg"><i style="background:#B5566E"></i><div><b>G</b><span>Кавказ и Передняя Азия. Главная линия рода аргын.</span></div></div>
+      <div class="hg"><i style="background:#6FA3B5"></i><div><b>N</b><span>Сибирь и Урал.</span></div></div>
+      <div class="hg"><i style="background:#8A7DB8"></i><div><b>J</b><span>Ближний Восток.</span></div></div>
+      <div class="hg"><i style="background:#6E9E72"></i><div><b>Q</b><span>Сибирь. Главная линия рода канлы.</span></div></div>
+      <div class="hg"><i style="background:#4A4D55"></i><div><b>Другие</b><span>Редкие линии, 3,2%.</span></div></div>
+    </div>
+    <p class="caption">Э. Хусаинова и др., 2022. Происхождение гаплогрупп указано упрощённо — по регионам, где они сегодня встречаются чаще всего.</p>
+  </article>
+
+  <div class="grid2" style="margin-top:18px">
+    <article class="card">
+      <h3>Материнские линии</h3>
+      <p>Митохондриальная ДНК передаётся от матери ко всем детям. У казахов она почти поровну делится между Западом и Востоком Евразии.</p>
+      <div class="split" role="img" aria-label="Восточноевразийские линии 58%, западноевразийские 41,5%">
+        <div style="width:58%;background:#5E7FB8">Восток · 58%</div>
+        <div style="width:42%;background:#C9824A">Запад · 41,5%</div>
+      </div>
+      <p class="caption">Г. М. Березина и др., выборка 246 человек.</p>
+    </article>
+    <article class="card">
+      <h3>Древняя ДНК: смешение, а не замена</h3>
+      <p>Саки бронзового и раннего железного века были в основном западноевразийского происхождения. С приходом хунну, тюрков и монголов восточноазиатский компонент рос от эпохи к эпохе, но древние линии не исчезли — они смешались с новыми.</p>
+      <p class="caption">Damgaard et al., «137 ancient human genomes from across the Eurasian steppes», Nature, 2018.</p>
+    </article>
+  </div>
+
+  <h3 style="margin-top:54px">ДНК проверяет шежіре</h3>
+  <div class="grid2" style="margin-top:16px">
+    <article class="card story">
+      <div class="ic" style="background:#B5566E">G1</div>
+      <div>
+        <h3>Аргыны: легенда подтвердилась</h3>
+        <p>У аргынов преобладает гаплогруппа G1. Генетическое дерево рода почти точно совпало с шежіре: отдельные ветви ведут к Караходже и его брату Сомдыку. Караходжа — реальное историческое лицо, в 1405 году он был послом к Тамерлану.</p>
+        <span class="verdict" style="background:rgba(111,194,165,.16);color:#8FE0C3">Шежіре подтверждено</span>
+      </div>
+    </article>
+    <article class="card story">
+      <div class="ic" style="background:#E3B04B">C2</div>
+      <div>
+        <h3>Кереи: сюрприз</h3>
+        <p>У 85,8% кереев — линия C2 (выборка 207 человек). Но легенда о происхождении кереев от монгольских кереитов не подтвердилась: общего отцовского предка с ними генетики не нашли.</p>
+        <span class="verdict" style="background:rgba(217,137,74,.16);color:#F0B083">Легенда под вопросом · PLOS ONE, 2024</span>
+      </div>
+    </article>
+  </div>
+
+  <h3 style="margin-top:54px;margin-bottom:14px">У каждого рода — своя «подпись»</h3>
+  <div class="clans">
+    <div class="clan"><b>Кереи</b><span class="pc" style="color:#E3B04B">85,8%</span><small>Средний жуз · C2</small><div class="bar"><i style="width:85.8%;background:#E3B04B"></i></div></div>
+    <div class="clan"><b>Канлы</b><span class="pc" style="color:#6E9E72">67,5%</span><small>Старший жуз · Q</small><div class="bar"><i style="width:67.5%;background:#6E9E72"></i></div></div>
+    <div class="clan"><b>Сиргели</b><span class="pc" style="color:#6FA3B5">65,6%</span><small>Старший жуз · N</small><div class="bar"><i style="width:65.6%;background:#6FA3B5"></i></div></div>
+    <div class="clan"><b>Албаны</b><span class="pc" style="color:#E3B04B">65,2%</span><small>Старший жуз · C2</small><div class="bar"><i style="width:65.2%;background:#E3B04B"></i></div></div>
+    <div class="clan"><b>Ысты</b><span class="pc" style="color:#8A7DB8">63,2%</span><small>Старший жуз · J1</small><div class="bar"><i style="width:63.2%;background:#8A7DB8"></i></div></div>
+    <div class="clan"><b>Дулаты</b><span class="pc" style="color:#E3B04B">62,3%</span><small>Старший жуз · C2</small><div class="bar"><i style="width:62.3%;background:#E3B04B"></i></div></div>
+  </div>
+  <p class="caption">Доля главной отцовской линии в роду. Старший жуз: исследование 2018 г. по Y-хромосоме; кереи: PLOS ONE, 2024. Роды с разными «подписями» — ещё одно доказательство того, что казахи сложились из многих корней.</p>
+</section>
+
+<section class="finale wrap" id="finale">
+  <div class="eyebrow">Итог</div>
+  <h2>Формула казахского народа</h2>
+  <div class="formula">
+    <svg viewBox="0 0 1200 460" role="img" aria-label="Саки, усуни, канглы, гунны, тюрки, кыпчаки и монгольские роды сливаются в казахский народ в 1465 году">
+      <g id="streams"></g>
+      <circle cx="930" cy="230" r="10" fill="#F0CE82" filter="url(#glow)"/>
+      <text class="qazaq" x="960" y="224">Қазақ</text>
+      <text class="ftxt" x="962" y="258" style="fill:#A3A6AE;font-family:'JetBrains Mono',monospace;font-size:15px">1465 · Казахское ханство</text>
+    </svg>
+  </div>
+  <p class="closing">Казахи не пришли откуда-то одним народом — они <em>сложились здесь</em>, в степи, из десятков племён за двадцать веков. Это доказывают и летописи, и шежіре, и ДНК.</p>
+
+  <footer>
+    <b style="color:var(--text)">Источники</b>
+    <ol>
+      <li><a href="https://e-history.kz/media/scorm/362/text/text.htm" target="_blank" rel="noopener">История сложения казахской народности — e-history.kz</a></li>
+      <li><a href="https://ru.wikipedia.org/wiki/%D0%93%D0%B5%D0%BD%D0%BE%D1%84%D0%BE%D0%BD%D0%B4_%D0%BA%D0%B0%D0%B7%D0%B0%D1%85%D0%BE%D0%B2" target="_blank" rel="noopener">Генофонд казахов — сводка исследований</a></li>
+      <li><a href="https://www.nature.com/articles/s41586-018-0094-2" target="_blank" rel="noopener">Damgaard et al. 137 ancient human genomes from across the Eurasian steppes. Nature, 2018</a></li>
+      <li><a href="https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0309080" target="_blank" rel="noopener">Y-хромосомное исследование рода керей. PLOS ONE, 2024</a></li>
+      <li><a href="https://edq.kz/2019/04/25/%D0%BA%D0%B0%D0%B7%D0%B0%D1%85%D1%81%D0%BA%D0%B8%D0%B9-%D1%80%D0%BE%D0%B4-%D0%B0%D1%80%D0%B3%D1%8B%D0%BD-%D0%BF%D1%80%D0%BE%D1%87%D1%82%D0%B5%D0%BD%D0%B8%D0%B5-y-%D1%85%D1%80%D0%BE%D0%BC%D0%BE%D1%81/" target="_blank" rel="noopener">Казахский род аргын: прочтение Y-хромосомы подтвердило легендарных предков</a></li>
+      <li><a href="https://itest.kz/ru/attestation/istoriya-kazahstana-4077/razdel-viii-kazahstan-v-period-pozdnego-srednevekovya/lecture/formirovanie-kazahskogo-naroda" target="_blank" rel="noopener">Формирование казахского народа — itest.kz</a></li>
+    </ol>
+  </footer>
+</section>
+</main>
+
+<script>
+const GEO = {"W":1000,"H":640,"land":"M556,491L556,491L558,490L559,491L561,492L561,493L561,493L558,496L555,497L554,497L554,497L553,500L552,500L550,501L549,502L547,505L542,509L542,510L542,511L544,511L546,512L547,513L551,512L552,512L553,513L554,517L555,518L557,519L558,519L560,520L562,520L564,519L566,520L566,520L566,514L567,515L568,515L569,515L569,514L570,512L569,510L570,509L570,509L571,509L571,510L571,511L572,512L573,512L574,514L574,515L575,518L577,518L578,518L580,518L581,518L581,520L581,521L581,522L582,522L583,521L585,521L586,522L587,523L590,525L591,525L594,525L595,526L596,526L597,525L600,526L600,526L600,527L593,531L593,532L591,534L590,534L589,534L586,533L586,534L585,534L585,535L586,536L586,537L585,538L583,537L583,537L583,537L582,537L581,537L579,540L578,541L578,542L577,543L575,543L574,544L573,545L572,544L572,544L571,543L570,544L569,544L568,543L566,542L565,542L561,542L559,543L558,543L557,544L552,545L551,544L550,543L550,541L548,541L547,541L546,540L546,539L546,539L546,538L550,535L552,533L553,532L553,532L553,531L553,531L551,530L551,529L551,529L551,528L550,526L547,523L546,523L546,523L545,526L544,527L541,529L539,530L534,533L533,533L532,533L531,533L529,531L527,530L526,531L525,532L525,534L524,535L523,536L525,542L525,543L524,543L525,545L524,546L521,545L518,545L512,546L512,546L512,547L512,547L515,547L518,547L519,547L519,548L518,549L518,549L515,549L515,550L515,550L516,552L517,552L517,553L516,553L516,554L515,553L515,553L515,554L515,554L514,555L513,555L512,555L512,557L511,560L510,562L509,563L507,563L506,563L504,562L501,562L498,561L494,560L490,562L489,563L489,564L488,564L486,570L487,571L487,571L492,573L492,573L493,574L493,576L493,577L495,577L497,577L499,577L500,577L502,578L502,578L502,579L500,585L501,587L501,590L502,593L505,595L506,596L507,597L507,598L506,600L506,602L504,604L503,604L501,607L500,610L497,614L496,616L495,622L494,624L494,623L493,623L491,623L490,622L489,622L488,622L485,623L483,622L480,620L475,619L469,619L469,616L469,613L469,608L471,604L471,603L471,603L470,602L467,601L465,600L464,599L462,598L461,597L458,596L456,595L454,595L453,596L452,596L451,596L447,593L440,587L435,584L432,582L431,581L429,580L425,575L422,576L418,573L414,570L414,569L409,564L405,561L401,557L398,555L393,551L391,548L390,547L389,546L389,538L387,535L385,532L384,529L383,523L382,519L381,518L379,516L376,514L373,512L372,512L372,513L371,513L370,514L368,514L367,514L366,514L362,513L361,512L359,512L354,512L353,512L348,508L346,507L346,506L346,505L347,503L348,502L348,501L347,499L347,498L348,497L349,497L350,497L349,496L349,495L348,494L345,492L345,492L345,491L346,491L346,489L346,488L347,487L347,486L346,486L346,485L344,483L342,483L337,482L335,482L333,481L332,477L332,476L331,476L329,476L327,475L326,474L324,471L322,468L320,471L319,471L317,470L315,470L314,470L313,471L313,472L314,473L315,474L317,477L318,479L318,480L318,480L318,480L317,480L317,480L316,480L316,479L316,477L315,477L314,476L313,475L311,475L310,474L309,475L308,476L308,478L306,481L305,482L303,482L297,481L295,482L294,483L291,486L289,487L288,488L288,493L287,498L288,500L289,501L289,501L288,502L288,502L287,503L286,503L284,502L282,502L277,501L272,500L267,499L268,493L269,487L270,481L271,475L271,469L272,464L273,458L274,452L275,446L276,440L277,434L278,429L279,423L279,417L280,411L281,405L284,405L287,404L289,404L293,403L297,403L300,402L304,401L307,401L309,400L313,400L319,399L322,398L325,398L328,397L330,397L331,399L334,401L336,403L338,404L341,406L343,408L345,410L348,412L350,414L352,416L355,418L357,420L359,422L362,424L364,426L366,428L369,430L371,432L372,433L372,435L373,438L375,440L377,442L379,446L381,448L383,450L385,454L387,456L389,456L392,456L396,456L399,455L403,455L407,455L410,454L415,455L419,455L422,456L425,456L429,457L431,457L433,457L434,457L436,456L438,455L440,454L442,454L444,455L445,457L447,459L448,461L450,463L453,464L454,467L456,471L457,473L458,476L460,475L462,474L464,473L463,476L463,479L463,483L462,486L462,490L461,493L461,496L461,498L465,498L467,499L471,499L471,502L471,505L472,509L472,512L473,516L474,518L474,520L475,520L476,521L481,521L484,520L487,520L490,520L494,520L496,520L497,520L498,520L499,521L500,522L501,523L502,524L501,526L501,528L500,530L502,531L503,532L505,534L508,535L509,535L511,534L511,534L511,532L510,531L510,529L511,528L512,526L514,524L516,521L519,519L520,518L520,515L522,514L524,513L526,512L527,511L530,508L532,507L534,506L537,505L540,503L542,500L544,498L546,496L547,496L548,497L549,497L550,497L551,495L551,494L552,493L554,493ZM551,526L551,525L551,524L550,523L549,524L550,524L551,526ZM563,552L562,552L560,552L559,552L560,550L560,550L560,550L559,549L558,549L558,547L558,546L559,546L559,546L561,547L562,548L563,548L563,550L563,552ZM575,550L574,551L573,551L572,550L573,550L574,549L574,549L575,549ZM-30,115L-27,116L-25,117L-25,118L-24,120L-23,123L-24,128L-22,135L-22,135L-23,136L-25,136L-27,135L-27,136L-27,137L-27,139L-28,140L-29,142L-29,143L-28,144L-29,145L-30,145L-30,115ZM-30,146L-26,148L-25,150L-24,151L-23,151L-21,152L-19,152L-18,153L-18,153L-18,155L-18,157L-18,157L-17,158L-16,158L-16,159L-17,159L-17,160L-17,161L-18,164L-17,165L-17,166L-18,167L-19,168L-19,169L-20,171L-20,173L-19,174L-19,176L-18,177L-15,176L-14,176L-12,177L-11,178L-10,180L-10,181L-9,182L-8,183L-6,184L-6,185L-5,186L-3,186L-2,185L1,185L3,186L4,186L6,186L7,186L8,186L9,189L10,190L9,192L10,195L12,200L13,202L14,202L15,202L15,202L16,200L17,200L18,200L20,203L21,204L23,205L24,207L26,210L27,210L29,210L30,210L31,211L31,213L31,214L32,215L33,215L35,218L37,221L38,221L40,221L41,222L42,222L42,223L41,224L40,226L41,228L40,229L39,230L38,231L36,233L34,234L32,234L30,234L30,235L31,237L32,238L34,239L34,240L33,240L32,240L30,239L30,240L28,240L27,242L26,244L28,245L29,246L28,248L28,249L28,251L27,251L27,252L27,252L28,253L28,253L28,254L26,255L24,258L23,260L22,261L21,262L20,262L15,260L11,259L10,258L7,257L6,257L3,259L1,260L-0,260L-3,259L-4,260L-5,262L-6,264L-7,264L-8,265L-8,265L-8,266L-8,266L-7,267L-7,267L-8,268L-9,268L-9,269L-10,270L-10,271L-10,271L-11,271L-16,268L-17,268L-21,267L-26,269L-28,269L-30,268L-30,146ZM200,554L200,555L199,551L199,547L200,546L201,546L200,547ZM376,670L376,669L373,666L371,664L370,664L368,665L366,665L363,664L362,663L360,661L359,659L358,659L356,659L356,657L356,656L357,655L357,652L356,650L355,649L355,648L356,647L356,646L357,644L356,641L356,637L356,634L356,632L347,631L339,630L339,630L336,625L334,621L332,619L327,616L325,615L323,612L321,610L321,607L321,606L320,605L320,605L319,605L313,601L311,600L308,600L307,600L305,599L303,600L302,600L300,600L299,599L297,596L294,594L292,593L289,591L285,590L283,589L282,589L282,588L282,587L282,586L281,584L281,583L279,582L277,582L274,581L271,580L269,579L266,579L264,579L263,579L262,580L261,582L260,583L259,583L258,583L256,582L252,581L246,580L242,581L239,582L235,584L231,586L230,587L227,593L226,593L225,594L223,594L221,594L217,595L215,595L209,594L209,592L209,585L210,579L211,576L212,570L213,566L213,564L214,561L215,558L216,555L216,553L215,551L214,548L214,547L214,545L212,545L211,543L210,542L207,541L206,540L204,541L203,542L203,540L203,538L206,533L207,535L209,536L211,536L213,536L213,535L212,534L211,533L211,531L212,529L213,527L212,526L211,525L209,525L206,524L203,523L202,525L203,529L202,527L201,524L200,521L200,516L200,512L202,508L204,505L206,500L208,496L208,498L209,500L210,502L211,503L214,504L216,504L218,503L219,504L221,506L222,508L224,509L228,509L230,509L232,510L233,510L234,510L233,508L233,506L234,505L237,507L240,507L240,506L241,506L241,504L242,503L242,501L241,500L240,498L235,492L233,490L232,488L231,485L231,481L231,479L230,472L229,472L228,471L226,471L223,471L219,471L217,470L216,470L213,472L211,474L208,478L209,480L209,481L207,488L207,491L207,492L206,491L205,487L204,482L203,476L207,472L211,470L214,469L215,468L219,467L224,467L228,467L232,467L234,467L236,467L238,468L239,469L242,472L245,476L248,479L249,480L249,482L249,483L251,488L252,490L254,493L255,495L256,496L256,498L257,499L258,499L261,499L264,499L266,499L267,499L267,499L272,500L277,501L282,502L284,502L286,503L287,503L288,502L288,502L289,501L289,501L288,500L287,498L288,493L288,488L289,487L291,486L294,483L295,482L297,481L303,482L305,482L306,481L308,478L308,476L309,475L310,474L311,475L313,475L314,476L315,477L316,477L316,479L316,480L317,480L317,480L318,480L318,480L318,480L318,479L317,477L315,474L314,473L313,472L313,471L314,470L315,470L317,470L319,471L320,471L322,468L324,471L326,474L327,475L329,476L331,476L332,476L332,477L333,481L335,482L337,482L342,483L344,483L346,485L346,486L347,486L347,487L346,488L346,489L346,491L345,491L345,492L345,492L348,494L349,495L349,496L350,497L349,497L348,497L347,498L347,499L348,501L348,502L347,503L346,505L346,506L346,507L348,508L353,512L354,512L359,512L361,512L362,513L366,514L367,514L368,514L370,514L371,513L372,513L372,512L373,512L376,514L379,516L381,518L382,519L383,523L384,529L385,532L387,535L389,538L389,546L390,547L391,548L393,551L398,555L401,557L405,561L409,564L414,569L414,570L418,573L422,576L425,575L429,580L431,581L432,582L435,584L440,587L447,593L451,596L452,596L453,596L454,595L456,595L458,596L461,597L462,598L464,599L465,600L467,601L470,602L471,603L471,603L471,604L469,608L469,613L469,616L469,619L468,619L465,619L460,617L456,615L453,613L453,613L452,614L451,616L450,618L449,621L444,621L439,621L436,622L433,624L433,626L432,628L430,634L428,639L427,642L426,644L423,647L419,649L417,650L416,651L416,652L415,652L414,652L412,652L408,653L405,654L400,655L397,655L396,656L396,656L396,658L397,659L397,660L396,661L395,663L394,666L392,667L390,668L388,670L376,670ZM-30,432L-21,431L-18,430L-15,431L-13,430L-5,428L-3,427L-3,427L-2,428L-0,429L1,430L1,431L4,430L7,431L9,432L10,433L11,434L13,435L14,434L16,432L17,432L17,432L18,432L20,433L20,434L20,435L22,437L23,440L25,442L25,443L24,443L24,444L25,445L26,446L28,446L28,447L29,447L29,448L29,449L28,450L29,452L30,453L31,454L31,458L31,460L30,462L29,463L26,465L26,466L26,467L26,468L26,471L26,473L26,474L25,474L27,476L29,478L31,479L34,479L36,480L38,482L40,485L42,490L43,491L43,492L43,493L43,493L42,491L40,488L38,489L37,490L33,496L32,496L30,496L28,495L27,495L26,495L26,496L26,497L26,498L26,499L26,500L27,502L27,502L26,504L26,505L25,505L26,507L26,509L27,510L25,513L25,515L25,517L24,520L24,521L24,521L25,522L26,523L26,523L26,524L24,525L24,526L23,527L22,528L21,530L19,531L18,532L18,533L21,534L21,536L24,539L24,540L23,541L23,541L23,542L23,543L23,545L22,546L22,547L24,549L25,551L25,552L24,553L24,555L24,555L23,554L22,553L21,553L20,553L18,554L16,555L14,555L13,556L12,556L12,555L12,554L13,550L13,549L13,548L12,547L11,546L10,546L8,547L6,547L3,546L1,545L0,545L-3,542L-4,541L-5,540L-7,539L-10,539L-11,538L-13,537L-14,537L-17,539L-21,541L-23,541L-23,537L-24,536L-24,536L-25,535L-26,535L-28,536L-30,536L-30,432ZM494,624L495,622L496,616L497,614L500,610L501,607L503,604L504,604L506,602L506,600L507,598L507,597L506,596L505,595L502,593L501,590L501,587L500,585L502,579L502,578L502,578L500,577L499,577L497,577L495,577L493,577L493,576L493,574L492,573L492,573L487,571L487,571L486,570L488,564L489,564L489,563L490,562L494,560L498,561L501,562L504,562L506,563L507,563L509,563L510,562L511,560L512,557L512,555L513,555L514,555L515,554L515,554L515,553L515,553L516,554L516,553L517,553L517,552L516,552L515,550L515,550L515,549L518,549L518,549L519,548L519,547L518,547L515,547L512,547L512,547L512,546L512,546L518,545L521,545L524,546L525,545L524,543L525,543L525,542L523,536L524,535L525,534L525,532L526,531L527,530L529,531L531,533L532,533L533,533L534,533L539,530L541,529L544,527L545,526L546,523L546,523L547,523L550,526L551,528L551,529L551,529L551,530L553,531L553,531L553,532L553,532L552,533L550,535L546,538L546,539L546,539L546,540L547,541L548,541L550,541L550,543L551,544L552,545L557,544L558,543L558,544L558,545L554,546L552,548L552,550L551,550L550,551L549,551L548,549L547,548L545,547L541,546L538,545L534,546L530,548L529,549L529,550L529,551L529,552L529,552L528,553L527,552L525,551L525,553L524,555L524,557L525,559L525,563L527,563L529,562L531,561L533,561L535,562L539,562L542,561L542,562L543,561L544,561L544,562L547,561L549,561L551,561L552,561L553,563L554,565L556,565L560,565L561,563L562,562L564,562L565,561L566,560L567,560L569,559L569,560L570,561L570,562L570,563L570,563L573,563L574,564L574,565L574,567L575,568L576,568L580,565L581,565L581,566L583,568L584,569L585,569L586,567L587,565L589,565L591,564L592,564L597,564L599,564L602,564L604,563L606,562L607,561L609,561L611,561L612,561L612,562L612,565L612,567L614,570L615,571L616,572L617,573L616,574L615,575L615,575L615,576L615,577L616,580L617,582L619,584L621,584L622,584L622,582L624,581L625,581L627,580L632,582L636,583L638,585L639,586L638,590L638,592L638,594L640,596L641,598L641,601L642,601L642,602L642,605L642,607L642,607L644,608L646,610L647,612L646,613L645,615L643,616L642,616L642,616L641,615L639,613L637,613L634,613L633,613L631,612L629,613L628,614L627,615L625,616L623,617L619,618L617,618L616,618L616,617L618,616L618,615L618,613L616,613L616,613L615,613L613,612L611,613L607,614L601,619L598,621L596,625L590,627L586,629L582,633L579,635L578,635L576,635L575,634L573,631L572,627L571,624L571,620L571,616L572,611L572,606L573,604L573,603L572,603L571,603L569,604L568,604L567,603L567,601L568,597L566,593L562,590L558,590L555,591L553,593L551,597L549,600L547,602L545,603L545,604L545,605L546,608L546,611L545,613L543,614L542,614L540,613L540,612L537,612L533,613L530,614L529,616L528,618L529,621L529,623L528,624L527,625L526,626L524,624L521,622L519,620L518,620L518,620L517,620L517,621L517,621L516,622L514,622L513,622L513,623L511,624L508,625L506,626L505,628L505,628L504,628L501,630L499,629L496,627L495,625ZM551,526L551,526L550,524L549,524L550,523L551,524L551,525ZM553,554L552,555L550,555L550,554L549,553L549,553L549,553L551,553L552,553L553,554ZM-30,536L-28,536L-26,535L-25,535L-24,536L-24,536L-23,537L-23,541L-23,541L-24,542L-27,543L-30,545L-30,536ZM576,670L576,669L576,668L576,667L576,665L574,664L574,661L572,657L571,656L570,655L568,653L567,652L568,650L569,649L572,645L574,643L576,642L578,642L579,642L580,640L582,639L585,636L586,634L588,633L590,633L592,632L594,631L596,630L599,630L604,629L606,629L612,628L619,627L620,627L623,628L625,628L626,628L629,626L633,624L636,622L637,622L639,622L640,622L642,623L643,624L644,623L646,622L648,623L652,624L653,624L654,628L655,628L658,627L660,628L662,629L663,630L664,631L666,633L666,634L667,636L667,642L667,643L666,644L666,645L667,646L669,646L670,647L671,647L672,650L673,651L674,651L677,650L679,648L680,648L681,651L683,652L685,653L686,653L686,653L687,656L689,659L690,661L691,664L692,665L693,667L693,668L693,670L576,670ZM1030,384L1026,385L1026,385L1024,382L1023,381L1020,380L1018,378L1014,377L1012,375L1011,373L1006,367L1002,363L1002,362L1000,361L999,361L997,361L996,360L995,359L995,356L995,354L994,354L989,356L986,357L983,356L978,355L975,354L971,352L967,353L965,352L962,350L960,349L957,349L953,349L946,350L944,351L940,353L938,354L933,354L930,354L927,355L925,356L922,356L921,356L920,356L917,357L916,357L914,356L912,356L910,356L910,357L909,357L908,356L906,353L905,352L904,351L903,350L903,348L902,345L903,341L904,340L904,339L905,337L905,336L905,334L903,333L902,330L902,329L902,327L902,323L902,323L901,322L900,320L900,318L897,315L896,314L895,313L893,313L891,311L889,309L887,307L887,306L886,305L885,302L884,301L883,300L882,299L882,299L879,299L878,298L877,297L876,296L875,295L874,295L874,296L873,297L872,297L871,297L870,297L869,296L867,294L865,294L863,295L861,296L860,296L858,296L857,296L856,295L854,295L851,294L849,293L848,291L847,289L845,289L843,288L840,288L838,287L837,287L837,287L837,286L837,285L837,284L837,283L837,283L835,282L833,282L832,281L831,280L831,279L832,278L832,278L832,277L832,276L831,275L831,274L830,273L830,273L830,273L832,272L833,271L833,270L835,269L835,268L834,266L835,264L837,263L838,262L839,262L840,262L842,261L842,262L844,262L845,261L845,260L845,259L846,259L846,259L847,260L848,260L849,259L850,258L850,256L850,255L852,255L853,255L854,253L855,252L856,251L856,250L855,248L855,246L856,245L858,244L860,243L860,241L860,240L861,239L863,239L864,237L865,237L867,235L869,234L870,233L870,231L871,231L872,229L873,227L874,227L876,226L877,225L878,225L879,224L879,223L880,221L881,221L881,220L882,218L883,217L886,216L888,215L889,215L890,213L890,212L890,211L891,210L892,211L894,212L895,212L896,213L897,213L898,212L898,210L899,209L901,209L901,210L901,211L903,212L904,213L906,212L907,211L909,211L911,211L913,210L913,210L915,210L919,209L920,208L923,208L924,209L925,211L926,213L927,215L928,216L929,216L930,217L932,218L933,219L934,218L934,218L936,217L938,217L939,217L940,218L941,218L942,218L945,217L946,217L947,217L948,217L948,215L950,214L951,213L952,212L953,212L954,213L955,212L955,212L956,211L957,211L959,211L961,212L962,212L963,211L963,211L964,211L965,211L966,210L967,210L971,209L973,210L974,210L975,211L976,211L978,210L979,209L980,206L980,204L981,204L982,203L983,202L984,202L985,200L986,199L987,197L987,197L987,194L987,193L987,191L986,188L986,186L985,185L984,185L983,185L981,185L980,184L979,183L978,182L977,180L977,180L976,179L975,178L974,177L973,176L973,172L973,171L973,170L972,169L972,168L972,167L972,165L973,164L974,163L975,162L974,160L974,159L974,158L975,156L978,153L979,149L979,148L979,145L979,144L980,144L982,145L982,144L984,145L988,145L990,145L992,145L993,144L995,145L997,146L999,146L1002,145L1006,143L1007,143L1010,143L1014,143L1017,143L1019,143L1021,144L1022,144L1023,143L1025,142L1029,142L1030,142L1030,384ZM558,543L559,543L561,542L565,542L566,542L568,543L569,544L570,544L571,543L572,544L572,544L573,545L574,544L575,543L577,543L578,542L578,541L579,540L581,537L582,537L583,537L583,537L583,537L585,538L586,537L586,536L585,535L585,534L586,534L586,533L589,534L590,534L591,534L593,532L593,531L600,527L600,526L600,526L597,525L596,526L595,526L594,525L591,525L590,525L587,523L586,522L585,521L583,521L582,522L581,522L581,521L581,520L581,518L580,518L578,518L577,518L575,518L574,515L574,514L573,512L572,512L571,511L571,510L571,509L570,509L570,509L569,510L570,512L569,514L569,515L568,515L567,515L566,514L566,520L566,520L564,519L562,520L560,520L558,519L557,519L555,518L554,517L553,513L552,512L551,512L547,513L546,512L544,511L542,511L542,510L542,509L547,505L549,502L550,501L552,500L553,500L554,497L554,497L555,497L558,496L561,493L561,493L561,492L559,491L558,490L556,491L556,491L555,490L555,489L556,487L557,486L557,484L558,483L560,480L561,479L564,477L566,478L568,477L570,476L571,476L572,476L578,477L580,477L586,479L588,479L590,480L590,481L592,482L598,482L600,483L601,483L603,485L604,485L602,480L603,477L604,469L605,468L607,467L610,466L611,464L614,464L615,464L616,463L616,462L619,464L624,466L628,468L633,470L639,471L644,471L645,470L646,468L647,467L649,467L654,467L660,467L663,466L668,464L669,464L670,464L674,465L676,465L678,465L679,465L681,465L684,464L689,465L694,464L695,464L698,463L700,464L703,465L705,465L706,465L708,465L710,464L710,465L711,467L713,468L715,469L716,471L718,471L720,471L724,471L726,471L729,474L732,476L733,478L733,479L733,480L733,480L727,481L726,482L725,485L720,488L717,489L716,489L714,491L707,496L703,499L701,501L700,502L700,503L700,504L696,510L693,511L690,512L689,513L686,514L680,514L678,514L674,514L673,514L671,516L670,520L669,521L669,522L668,524L668,527L667,528L666,530L665,532L663,533L662,531L661,532L660,533L658,533L657,533L655,535L651,535L650,535L649,530L648,528L648,527L647,527L642,532L639,533L637,533L634,532L634,532L633,533L633,534L634,536L634,536L633,536L631,537L630,538L626,542L623,543L620,544L619,545L618,545L617,547L616,549L616,551L616,552L616,553L617,554L618,556L617,557L617,558L616,560L614,560L612,561L611,561L609,561L607,561L606,562L604,563L602,564L599,564L597,564L592,564L591,564L589,565L587,565L586,567L585,569L584,569L583,568L581,566L581,565L580,565L576,568L575,568L574,567L574,565L574,564L573,563L570,563L570,563L570,562L570,561L569,560L569,559L567,560L566,560L565,561L564,562L562,562L561,563L560,565L556,565L554,565L553,563L552,561L551,561L549,561L547,561L544,562L544,561L543,561L542,562L542,561L539,562L535,562L533,561L531,561L529,562L527,563L525,563L525,559L524,557L524,555L525,553L525,551L527,552L528,553L529,552L529,552L529,551L529,550L529,549L530,548L534,546L538,545L541,546L545,547L547,548L548,549L549,551L550,551L551,550L552,550L552,548L554,546L558,545L558,544ZM563,552L563,552L563,550L563,548L562,548L561,547L559,546L559,546L558,546L558,547L558,549L559,549L560,550L560,550L560,550L559,552L560,552L562,552ZM575,550L575,549L574,549L574,549L573,550L572,550L573,551L574,551ZM553,554L553,554L552,553L551,553L549,553L549,553L549,553L550,554L550,555L552,555ZM177,389L176,390L175,389L174,386L175,384L176,383L177,383L177,384L175,385L175,386L175,388ZM180,387L179,387L179,385L180,384L181,384L180,386ZM224,384L224,385L223,384L222,382L223,381L224,382L225,383ZM556,491L554,493L552,493L551,494L551,495L550,497L549,497L548,497L547,496L546,496L544,498L542,500L540,503L537,505L534,506L532,507L530,508L527,511L526,512L524,513L522,514L520,515L520,518L519,519L516,521L514,524L512,526L511,528L510,529L510,531L511,532L511,534L511,534L509,535L508,535L505,534L503,532L502,531L500,530L501,528L501,526L502,524L501,523L500,522L499,521L498,520L497,520L496,520L494,520L490,520L487,520L484,520L481,521L476,521L475,520L474,520L474,518L473,516L472,512L472,509L471,505L471,502L471,499L467,499L465,498L461,498L461,496L461,493L462,490L462,486L463,483L463,479L463,476L464,473L462,474L460,475L458,476L457,473L456,471L454,467L453,464L450,463L448,461L447,459L445,457L444,455L442,454L440,454L438,455L436,456L434,457L433,457L431,457L429,457L425,456L422,456L419,455L415,455L410,454L407,455L403,455L399,455L396,456L392,456L389,456L387,456L385,454L383,450L381,448L379,446L377,442L375,440L373,438L372,435L372,433L371,432L369,430L366,428L364,426L362,424L359,422L357,420L355,418L352,416L350,414L348,412L345,410L343,408L341,406L338,404L336,403L334,401L331,399L330,397L328,397L325,398L322,398L319,399L313,400L309,400L307,401L304,401L300,402L297,403L293,403L289,404L287,404L284,405L281,405L280,411L279,417L279,423L278,429L277,434L276,440L275,446L274,452L273,458L272,464L271,469L271,475L270,481L269,487L268,493L267,499L266,499L264,499L261,499L258,499L257,499L256,498L256,496L255,495L254,493L252,490L251,488L249,483L249,482L249,480L248,479L245,476L242,472L239,469L238,468L236,467L234,467L232,467L228,467L224,467L219,467L215,468L214,469L211,470L207,472L203,476L203,473L203,469L204,467L205,464L207,462L208,460L209,456L210,451L209,450L208,449L207,449L205,449L204,449L202,447L200,446L199,446L198,446L197,446L196,444L196,443L196,442L195,439L193,437L192,437L189,436L188,436L188,434L189,431L189,430L189,428L189,427L189,425L187,423L186,420L185,415L185,408L184,407L182,406L179,404L176,403L176,402L175,401L176,399L176,398L177,396L179,396L184,396L188,397L190,401L191,401L193,402L195,402L196,402L199,402L199,401L198,400L197,400L196,399L194,397L192,394L192,392L192,391L193,389L195,388L197,386L199,384L200,383L201,381L204,382L207,381L213,383L220,384L221,384L225,386L228,387L231,388L233,388L231,386L227,383L227,381L230,376L233,371L236,366L237,360L236,359L237,357L238,356L239,354L239,352L238,349L238,348L236,346L232,345L229,344L227,344L226,345L226,346L223,347L222,347L221,346L220,344L219,344L216,343L214,340L214,340L209,337L207,336L202,337L198,338L197,339L195,340L194,340L193,339L192,339L190,341L186,342L184,344L182,344L179,344L177,344L176,344L174,344L172,344L172,345L171,347L170,346L169,347L169,348L168,347L165,344L162,342L159,339L159,339L159,338L158,337L158,336L159,335L160,335L161,335L161,335L162,336L163,337L165,337L166,337L167,336L166,331L165,327L164,322L163,320L162,316L160,313L159,309L158,308L156,307L150,305L148,304L146,304L145,304L143,303L143,300L143,298L143,297L144,294L144,291L143,290L141,288L139,285L139,281L142,275L146,272L148,271L149,269L150,268L150,267L149,265L148,264L147,262L149,258L151,254L154,251L157,249L159,248L160,247L161,245L161,243L162,241L163,241L164,240L166,239L167,239L169,240L170,243L173,249L174,253L174,254L176,256L177,257L180,257L183,256L184,255L185,254L185,252L185,250L184,248L184,245L185,240L185,238L185,238L187,239L188,239L190,239L193,237L197,235L199,233L200,231L202,230L204,230L207,230L209,229L212,228L215,227L216,227L217,226L220,223L223,221L225,219L226,218L227,219L229,220L231,222L232,223L233,225L232,226L233,227L234,227L235,227L237,227L240,226L244,224L248,223L250,224L251,227L251,229L252,230L253,230L253,231L255,230L255,230L256,231L258,232L260,232L263,232L263,232L264,233L266,234L267,235L269,239L270,241L273,243L274,244L275,246L276,247L277,250L279,254L279,256L279,259L279,260L280,260L280,260L281,259L282,257L282,254L282,252L281,251L281,250L282,249L283,248L284,249L286,251L289,253L291,257L293,259L296,261L298,262L300,262L302,261L305,260L306,258L307,256L310,254L313,253L314,253L315,254L318,253L319,253L321,253L324,254L326,256L328,258L330,258L331,258L333,257L334,255L335,254L335,254L338,255L340,255L341,255L343,256L346,258L348,261L350,265L351,266L352,267L353,267L355,268L360,269L360,270L361,270L360,272L360,273L364,272L365,271L367,268L368,265L369,264L370,264L371,265L372,266L373,268L376,269L377,270L379,270L384,270L389,268L392,266L393,263L394,259L396,257L395,254L393,252L393,251L387,249L387,248L387,248L381,245L379,244L378,243L378,241L376,239L373,237L372,236L373,235L376,234L379,232L380,232L383,232L386,230L388,229L389,227L389,226L386,221L386,218L387,217L388,215L389,214L390,212L391,211L393,211L397,211L399,211L401,212L404,212L405,213L406,212L407,211L407,210L406,209L403,207L401,205L400,205L398,205L396,203L394,203L394,202L394,200L395,199L396,199L397,199L399,198L400,198L400,197L400,197L399,196L398,196L397,196L395,196L393,195L391,194L392,193L393,192L394,191L394,189L394,187L395,185L396,184L398,183L402,185L407,187L408,187L408,186L408,186L415,186L417,185L418,184L424,184L425,183L426,182L428,182L430,182L432,181L434,181L434,181L436,181L439,181L439,180L440,180L442,179L446,178L447,178L449,179L451,178L453,178L454,179L455,179L456,179L457,177L458,175L459,174L460,174L461,173L461,172L465,172L468,171L469,171L473,171L478,170L481,170L486,168L488,167L492,167L495,166L497,164L499,164L501,164L502,164L503,163L503,162L503,160L503,159L504,158L506,158L507,158L510,155L512,154L514,153L518,153L522,153L525,155L527,156L529,157L531,158L532,158L534,158L535,157L535,156L536,155L540,154L541,155L543,159L544,163L547,169L548,172L547,174L547,176L547,179L546,181L547,183L550,184L556,183L559,182L560,182L561,181L562,179L563,179L564,180L565,182L566,184L566,186L567,188L568,189L569,188L570,187L570,186L569,186L569,185L569,184L570,183L572,184L574,184L578,187L580,187L580,187L582,187L584,186L585,185L585,184L586,184L587,185L587,186L586,188L585,189L582,191L581,194L581,197L582,198L582,199L583,200L583,201L584,200L587,197L588,196L590,196L593,196L595,196L596,197L598,198L598,198L599,197L599,195L599,194L602,191L604,189L605,189L607,189L608,189L610,187L612,185L612,183L612,182L613,181L616,181L617,180L619,179L623,176L625,174L628,173L629,173L630,172L632,170L633,170L633,173L632,177L631,178L628,178L628,179L628,181L629,181L629,182L631,183L635,186L640,189L646,193L650,196L651,197L652,199L656,203L659,207L664,214L669,220L674,228L677,232L684,241L685,243L689,249L692,254L695,258L696,258L696,257L696,256L697,255L698,254L699,253L700,253L701,252L701,251L701,249L700,248L701,246L701,246L702,245L703,245L703,243L705,243L706,243L707,243L708,244L709,245L710,245L711,244L712,245L712,247L711,249L711,250L712,251L715,250L717,250L717,251L718,252L718,253L718,254L719,255L721,254L723,253L726,253L729,254L731,253L733,252L735,252L737,251L738,249L738,248L739,247L741,247L743,246L744,245L745,244L747,243L748,243L752,244L754,244L757,246L758,247L760,249L762,250L763,252L764,254L766,258L767,259L769,259L770,259L772,259L776,261L778,261L779,261L779,262L779,264L780,265L782,267L783,268L785,270L785,271L786,272L788,271L790,271L796,271L797,271L798,272L799,271L800,271L802,271L802,269L803,268L805,266L806,264L807,262L808,262L809,262L809,264L809,265L808,266L808,268L810,267L812,269L815,272L816,273L818,274L819,274L821,274L822,275L823,277L821,277L818,277L816,278L816,278L815,280L814,281L814,283L815,285L815,289L815,291L813,294L812,295L811,296L809,297L806,298L802,300L801,301L800,303L800,304L800,306L800,310L800,313L801,317L803,322L803,324L805,326L806,327L806,329L805,331L805,334L804,335L802,336L800,336L798,339L797,340L794,343L793,343L792,343L791,341L790,340L789,340L788,341L785,341L782,341L781,342L779,343L776,342L774,342L772,342L769,341L764,340L762,340L761,340L761,342L761,344L761,346L760,355L759,362L758,368L758,372L757,377L756,381L756,383L756,384L757,385L759,386L762,386L762,386L763,388L763,390L763,392L763,393L762,394L761,394L760,394L758,393L757,393L755,394L752,395L752,395L750,395L749,394L748,392L746,391L745,393L740,395L735,398L732,399L731,399L728,400L726,401L724,402L721,404L718,405L717,407L715,408L716,409L717,410L718,410L720,410L723,409L725,410L727,410L727,411L727,412L726,412L726,413L726,413L725,416L726,418L726,421L727,424L727,425L727,427L728,428L729,431L731,432L733,437L735,440L736,443L736,445L736,446L738,447L738,449L739,450L739,451L739,451L736,451L734,452L732,454L732,454L732,455L732,456L734,456L736,457L736,458L734,459L731,461L730,462L729,464L730,465L730,468L731,471L733,474L733,475L733,476L732,476L729,474L726,471L724,471L720,471L718,471L716,471L715,469L713,468L711,467L710,465L710,464L708,465L706,465L705,465L703,465L700,464L698,463L695,464L694,464L689,465L684,464L681,465L679,465L678,465L676,465L674,465L670,464L669,464L668,464L663,466L660,467L654,467L649,467L647,467L646,468L645,470L644,471L639,471L633,470L628,468L624,466L619,464L616,462L616,463L615,464L614,464L611,464L610,466L607,467L605,468L604,469L603,477L602,480L604,485L603,485L601,483L600,483L598,482L592,482L590,481L590,480L588,479L586,479L580,477L578,477L572,476L571,476L570,476L568,477L566,478L564,477L561,479L560,480L558,483L557,484L557,486L556,487L555,489L555,490ZM-30,545L-27,543L-24,542L-23,541L-23,541L-23,541L-21,541L-17,539L-14,537L-13,537L-11,538L-10,539L-7,539L-5,540L-4,541L-3,542L0,545L1,545L3,546L6,547L8,547L10,546L11,546L12,547L13,548L13,549L13,550L12,554L12,555L12,556L13,556L14,555L16,555L18,554L20,553L21,553L22,553L23,554L24,555L24,555L24,557L23,564L24,565L25,566L25,567L25,569L25,570L24,572L24,573L25,575L25,575L26,576L27,576L27,577L27,586L27,587L28,587L30,587L31,589L32,590L33,593L34,594L38,595L42,596L44,598L44,599L42,599L39,599L37,601L36,603L36,604L36,605L37,608L37,609L37,611L37,612L37,613L34,614L31,615L25,619L24,620L23,624L22,625L21,624L19,623L19,625L18,626L17,627L18,631L18,633L17,634L14,637L13,638L13,639L14,640L17,647L17,650L19,650L20,650L20,650L20,651L20,652L19,653L22,654L22,656L23,662L23,663L21,665L20,666L20,668L21,668L24,670L-30,670ZM24,670L21,668L20,668L20,666L21,665L23,663L23,662L22,656L22,654L19,653L20,652L20,651L20,650L20,650L19,650L17,650L17,647L14,640L13,639L13,638L14,637L17,634L18,633L18,631L17,627L18,626L19,625L19,623L21,624L22,625L23,624L24,620L25,619L31,615L34,614L37,613L37,612L37,611L37,609L37,608L36,605L36,604L36,603L37,601L39,599L42,599L44,599L44,598L42,596L38,595L34,594L33,593L32,590L31,589L30,587L28,587L27,587L27,586L27,577L27,576L26,576L25,575L25,575L24,573L24,572L25,570L25,569L25,567L25,566L24,565L23,564L24,557L24,555L24,555L24,555L24,553L25,552L25,551L24,549L22,547L22,546L23,545L23,543L23,542L23,541L23,541L24,540L24,539L21,536L21,534L18,533L18,532L19,531L21,530L22,528L23,527L24,526L24,525L26,524L26,523L26,523L25,522L24,521L24,521L24,520L25,517L25,515L25,513L27,510L26,509L26,507L25,505L26,505L26,504L27,502L27,502L26,500L26,499L26,498L26,497L26,496L26,495L27,495L28,495L30,496L32,496L33,496L37,490L38,489L40,488L42,491L43,493L43,493L44,493L45,499L46,501L47,503L47,504L47,506L48,507L50,508L50,510L51,513L53,514L59,517L63,519L64,520L67,519L70,521L71,521L77,518L79,516L82,516L84,515L87,513L90,512L93,511L96,510L100,509L103,508L105,509L107,513L109,516L109,518L108,518L105,519L104,520L104,521L104,522L104,522L106,525L106,526L106,527L106,528L105,528L103,528L101,528L100,528L99,529L99,530L100,531L103,534L103,535L103,536L104,537L105,538L106,539L108,544L109,544L113,544L114,545L114,546L113,552L112,555L112,559L113,562L113,565L115,567L118,570L120,571L125,573L130,575L133,577L134,578L134,579L136,584L139,588L146,595L149,598L162,604L171,606L196,604L204,604L207,604L205,605L202,606L204,607L207,607L208,608L209,607L209,606L210,604L209,598L209,594L209,594L215,595L217,595L221,594L223,594L225,594L226,593L227,593L230,587L231,586L235,584L239,582L242,581L246,580L252,581L256,582L258,583L259,583L260,583L261,582L262,580L263,579L264,579L266,579L269,579L271,580L274,581L277,582L279,582L281,583L281,584L282,586L282,587L282,588L282,589L283,589L285,590L289,591L292,593L294,594L297,596L299,599L300,600L302,600L303,600L305,599L307,600L308,600L311,600L313,601L319,605L320,605L320,605L321,606L321,607L321,610L323,612L325,615L327,616L332,619L334,621L336,625L339,630L339,630L347,631L356,632L356,634L356,637L356,641L357,644L356,646L356,647L355,648L355,649L356,650L357,652L357,655L356,656L356,657L356,659L357,660L356,661L356,662L355,664L354,665L354,666L353,667L352,667L352,669L352,670L24,670ZM693,670L693,668L693,667L696,665L698,663L701,661L703,659L706,657L708,655L708,655L708,655L709,656L710,656L711,655L712,655L713,655L713,656L713,659L713,661L715,664L717,668L718,670L693,670ZM29,449L29,448L29,447L28,447L28,446L26,446L25,445L24,444L24,443L25,443L25,442L23,440L22,437L20,435L20,434L20,433L18,432L17,432L17,432L16,432L14,434L13,435L11,434L10,433L9,432L7,431L4,430L1,431L1,430L-0,429L-2,428L-3,427L1,423L3,421L4,419L5,417L4,412L5,406L6,399L5,396L1,392L0,390L-2,385L-7,381L-7,380L-11,375L-14,371L-12,369L-11,368L-9,368L-6,370L-3,372L-1,372L0,374L2,377L4,379L9,382L10,384L12,386L20,389L21,389L22,389L25,390L27,391L29,393L31,394L33,394L35,396L36,397L36,398L37,400L41,404L44,407L45,408L48,410L48,411L48,411L46,412L46,413L46,414L47,415L49,416L50,415L52,415L54,415L57,414L61,414L62,415L63,415L64,416L65,419L67,416L67,416L69,417L71,419L72,420L73,421L74,424L78,425L80,426L81,427L81,428L79,430L78,433L77,434L79,435L81,437L81,439L82,440L84,441L86,442L86,442L87,443L90,445L90,446L89,447L88,448L86,448L86,448L84,448L84,449L84,450L83,451L84,452L85,452L85,455L86,456L88,458L90,460L90,462L90,463L88,465L86,466L85,466L84,466L83,465L82,463L80,462L78,462L77,462L75,461L73,459L72,458L72,457L73,456L68,452L65,451L64,451L59,453L58,453L55,453L55,453L56,454L55,454L50,453L48,453L44,451L42,450L41,451L38,450L35,450L32,450L30,449ZM718,670L717,668L715,664L713,661L713,659L713,656L713,655L712,655L711,655L710,656L709,656L708,655L708,655L708,655L706,656L703,656L702,656L700,656L697,656L693,655L688,654L686,653L685,653L683,652L681,651L680,648L679,648L677,650L674,651L673,651L672,650L671,647L670,647L669,646L667,646L666,645L666,644L667,643L667,642L667,636L666,634L666,633L664,631L663,630L662,629L660,628L658,627L655,628L654,628L653,624L652,624L648,623L646,622L644,623L643,624L642,623L640,622L639,622L637,622L636,622L635,622L635,622L632,620L632,619L635,617L638,616L639,615L639,615L640,616L641,617L642,616L643,616L645,615L646,613L647,612L646,610L644,608L642,607L642,607L642,605L642,602L642,601L641,601L641,598L640,596L638,594L638,592L638,590L639,586L638,585L636,583L632,582L627,580L625,581L624,581L622,582L622,584L621,584L619,584L617,582L616,580L615,577L615,576L615,575L615,575L616,574L617,573L616,572L615,571L614,570L612,567L612,565L612,562L612,561L614,560L616,560L617,558L617,557L618,556L617,554L616,553L616,552L616,551L616,549L617,547L618,545L619,545L620,544L623,543L626,542L630,538L631,537L633,536L634,536L634,536L633,534L633,533L634,532L634,532L637,533L639,533L642,532L647,527L648,527L648,528L649,530L650,535L651,535L655,535L657,533L658,533L660,533L661,532L662,531L663,533L665,532L666,530L667,528L668,527L668,524L669,522L669,521L670,520L671,516L673,514L674,514L678,514L680,514L686,514L689,513L690,512L693,511L696,510L700,504L700,503L700,502L701,501L703,499L707,496L714,491L716,489L717,489L720,488L725,485L726,482L727,481L733,480L733,480L733,479L733,478L732,476L733,476L733,475L733,474L731,471L730,468L730,465L729,464L730,462L731,461L734,459L736,458L736,457L734,456L732,456L732,455L732,454L732,454L734,452L736,451L739,451L739,451L739,450L738,449L738,447L736,446L736,445L736,443L735,440L733,437L731,432L729,431L728,428L727,427L727,425L727,424L726,421L726,418L725,416L726,413L726,413L726,412L727,412L727,411L727,410L725,410L723,409L720,410L718,410L717,410L716,409L715,408L717,407L718,405L721,404L724,402L726,401L728,400L731,399L732,399L735,398L740,395L745,393L746,391L748,392L749,394L750,395L752,395L752,395L755,394L757,393L758,393L760,394L761,394L762,394L763,393L763,392L763,390L763,388L762,386L762,386L759,386L757,385L756,384L756,383L756,381L757,377L758,372L758,368L759,362L760,355L761,346L761,344L761,342L761,340L762,340L764,340L769,341L772,342L774,342L776,342L779,343L781,342L782,341L785,341L788,341L789,340L790,340L791,341L792,343L793,343L794,343L797,340L798,339L800,336L802,336L804,335L805,334L805,331L806,329L806,327L805,326L803,324L803,322L801,317L800,313L800,310L800,306L800,304L800,303L801,301L802,300L806,298L809,297L811,296L812,295L813,294L815,291L815,289L815,285L814,283L814,281L815,280L816,278L816,278L818,277L821,277L823,277L824,277L825,276L826,275L827,275L828,274L829,273L830,273L831,274L831,275L832,276L832,277L832,278L832,278L831,279L831,280L832,281L833,282L835,282L837,283L837,283L837,284L837,285L837,286L837,287L837,287L838,287L840,288L843,288L845,289L847,289L848,291L849,293L851,294L854,295L856,295L857,296L858,296L860,296L861,296L863,295L865,294L867,294L869,296L870,297L871,297L872,297L873,297L874,296L874,295L875,295L876,296L877,297L878,298L879,299L882,299L882,299L883,300L884,301L885,302L886,305L887,306L887,307L889,309L891,311L893,313L895,313L896,314L897,315L900,318L900,320L901,322L902,323L902,323L902,327L902,329L902,330L903,333L905,334L905,336L905,337L904,339L904,340L903,341L902,345L903,348L903,350L904,351L905,352L906,353L908,356L909,357L910,357L910,356L912,356L914,356L916,357L917,357L920,356L921,356L922,356L925,356L927,355L930,354L933,354L938,354L940,353L944,351L946,350L953,349L957,349L960,349L962,350L965,352L967,353L971,352L975,354L978,355L983,356L986,357L989,356L994,354L995,354L995,356L995,359L996,360L997,361L999,361L1000,361L1002,362L1002,363L1006,367L1011,373L1012,375L1014,377L1018,378L1020,380L1023,381L1024,382L1026,385L1026,385L1030,384L1030,670ZM-30,21L-29,21L-28,21L-28,22L-28,22L-29,24L-30,25L-30,21ZM-30,76L-29,77L-29,78L-30,78L-30,76ZM-30,81L-28,84L-28,85L-29,86L-29,87L-30,87L-30,81ZM43,493L43,492L43,491L45,491L48,491L49,492L50,493L50,494L49,496L50,497L51,497L52,497L53,499L54,500L58,500L59,500L61,500L61,501L61,502L60,504L60,505L60,506L62,508L63,509L62,511L62,515L63,517L63,519L59,517L53,514L51,513L50,510L50,508L48,507L47,506L47,504L47,503L46,501L45,499L44,493ZM114,545L113,544L109,544L108,544L106,539L105,538L104,537L103,536L103,535L103,534L100,531L99,530L99,529L100,528L101,528L103,528L105,528L106,528L106,527L106,526L106,525L104,522L104,522L104,521L104,520L105,519L108,518L109,518L109,516L107,513L105,509L103,508L100,509L96,510L93,511L90,512L87,513L84,515L82,516L79,516L77,518L71,521L70,521L71,518L71,516L71,515L70,514L70,513L71,513L72,513L73,514L74,513L73,511L72,509L71,508L71,508L71,507L72,507L74,506L74,505L75,504L72,502L69,502L68,499L67,498L66,496L64,495L64,492L62,490L60,489L60,489L61,488L61,488L66,490L66,489L67,489L68,488L69,486L69,485L66,481L63,478L62,474L61,471L62,470L62,470L66,468L67,468L67,467L66,466L65,464L65,463L64,462L62,462L59,459L59,459L59,458L59,458L61,458L61,458L61,457L60,456L59,454L59,453L64,451L65,451L68,452L73,456L72,457L72,458L73,459L75,461L77,462L78,462L80,462L82,463L83,465L84,466L85,466L86,466L88,465L90,463L90,462L90,460L88,458L86,456L85,455L85,452L84,452L83,451L84,450L84,449L84,448L86,448L86,448L88,448L89,447L90,446L92,447L92,448L92,449L93,449L94,449L95,449L96,452L98,454L98,455L99,456L99,457L101,459L101,461L101,464L102,465L106,468L107,468L111,470L112,470L115,467L117,465L119,464L122,464L124,463L126,461L128,459L129,457L131,459L133,464L135,471L136,474L136,476L136,479L137,481L140,488L141,490L143,494L144,495L146,495L149,496L151,497L152,498L153,500L154,501L154,505L150,503L146,502L143,502L140,503L138,503L136,506L133,512L130,517L129,520L130,523L129,524L128,524L127,525L124,530L123,531L122,531L122,531L123,529L121,528L120,529L118,532L116,534L116,535ZM64,473L65,472L64,472L64,471L63,472L63,473L64,473ZM57,460L57,460L56,459L56,459L57,458L57,458L58,458L58,459ZM43,491L42,490L40,485L38,482L36,480L34,479L31,479L29,478L27,476L25,474L26,474L26,473L26,471L26,468L26,467L26,466L26,465L29,463L30,462L31,460L31,458L31,454L30,453L29,452L28,450L29,449L30,449L32,450L35,450L38,450L41,451L42,450L44,451L48,453L50,453L55,454L56,454L55,453L55,453L58,453L59,453L59,454L60,456L61,457L61,458L61,458L59,458L59,458L59,459L59,459L62,462L64,462L65,463L65,464L66,466L67,467L67,468L66,468L62,470L62,470L61,471L62,474L63,478L66,481L69,485L69,486L68,488L67,489L66,489L66,490L61,488L61,488L60,489L60,489L62,490L64,492L64,495L66,496L67,498L68,499L69,502L72,502L75,504L74,505L74,506L72,507L71,507L71,508L71,508L72,509L73,511L74,513L73,514L72,513L71,513L70,513L70,514L71,515L71,516L71,518L70,521L67,519L64,520L63,519L63,517L62,515L62,511L63,509L62,508L60,506L60,505L60,504L61,502L61,501L61,500L59,500L58,500L54,500L53,499L52,497L51,497L50,497L49,496L50,494L50,493L49,492L48,491L45,491ZM57,460L58,459L58,458L57,458L57,458L56,459L56,459L57,460ZM64,473L64,473L63,473L63,472L64,471L64,472L65,472ZM352,670L352,669L352,667L353,667L354,666L354,665L355,664L356,662L356,661L357,660L356,659L358,659L359,659L360,661L362,663L363,664L366,665L368,665L370,664L371,664L373,666L376,669L376,670L352,670ZM388,670L390,668L392,667L394,666L395,663L396,661L397,660L397,659L396,658L396,656L396,656L397,655L400,655L405,654L408,653L412,652L414,652L415,652L416,652L416,651L417,650L419,649L423,647L426,644L427,642L428,639L430,634L432,628L433,626L433,624L436,622L439,621L444,621L449,621L450,618L451,616L452,614L453,613L453,613L456,615L460,617L465,619L468,619L469,619L469,619L475,619L480,620L483,622L485,623L488,622L489,622L490,622L491,623L493,623L494,623L494,624L495,625L496,627L499,629L501,630L504,628L505,628L505,628L506,626L508,625L511,624L513,623L513,622L514,622L516,622L517,621L517,621L517,620L518,620L518,620L519,620L521,622L524,624L526,626L527,625L528,624L529,623L529,621L528,618L529,616L530,614L533,613L537,612L540,612L540,613L542,614L543,614L545,613L546,611L546,608L545,605L545,604L545,603L547,602L549,600L551,597L553,593L555,591L558,590L562,590L566,593L568,597L567,601L567,603L568,604L569,604L571,603L572,603L573,603L573,604L572,606L572,611L571,616L571,620L571,624L572,627L573,631L575,634L576,635L578,635L579,635L582,633L586,629L590,627L596,625L598,621L601,619L607,614L611,613L613,612L615,613L616,613L616,613L618,613L618,615L618,616L616,617L616,618L617,618L619,618L623,617L625,616L627,615L628,614L629,613L631,612L633,613L634,613L637,613L639,613L641,615L642,616L642,616L641,617L640,616L639,615L639,615L638,616L635,617L632,619L632,620L635,622L635,622L636,622L633,624L629,626L626,628L625,628L623,628L620,627L619,627L612,628L606,629L604,629L599,630L596,630L594,631L592,632L590,633L588,633L586,634L585,636L582,639L580,640L579,642L578,642L576,642L574,643L572,645L569,649L568,650L567,652L568,653L570,655L571,656L572,657L574,661L574,664L576,665L576,667L576,668L576,669L576,670L388,670ZM693,667L692,665L691,664L690,661L689,659L687,656L686,653L688,654L693,655L697,656L700,656L702,656L703,656L706,656L708,655L706,657L703,659L701,661L698,663L696,665Z","kz":"M177,389L176,390L175,389L174,386L175,384L176,383L177,383L177,384L175,385L175,386L175,388ZM180,387L179,387L179,385L180,384L181,384L180,386ZM224,384L224,385L223,384L222,382L223,381L224,382L225,383ZM556,491L554,493L552,493L551,494L551,495L550,497L549,497L548,497L547,496L546,496L544,498L542,500L540,503L537,505L534,506L532,507L530,508L527,511L526,512L524,513L522,514L520,515L520,518L519,519L516,521L514,524L512,526L511,528L510,529L510,531L511,532L511,534L511,534L509,535L508,535L505,534L503,532L502,531L500,530L501,528L501,526L502,524L501,523L500,522L499,521L498,520L497,520L496,520L494,520L490,520L487,520L484,520L481,521L476,521L475,520L474,520L474,518L473,516L472,512L472,509L471,505L471,502L471,499L467,499L465,498L461,498L461,496L461,493L462,490L462,486L463,483L463,479L463,476L464,473L462,474L460,475L458,476L457,473L456,471L454,467L453,464L450,463L448,461L447,459L445,457L444,455L442,454L440,454L438,455L436,456L434,457L433,457L431,457L429,457L425,456L422,456L419,455L415,455L410,454L407,455L403,455L399,455L396,456L392,456L389,456L387,456L385,454L383,450L381,448L379,446L377,442L375,440L373,438L372,435L372,433L371,432L369,430L366,428L364,426L362,424L359,422L357,420L355,418L352,416L350,414L348,412L345,410L343,408L341,406L338,404L336,403L334,401L331,399L330,397L328,397L325,398L322,398L319,399L313,400L309,400L307,401L304,401L300,402L297,403L293,403L289,404L287,404L284,405L281,405L280,411L279,417L279,423L278,429L277,434L276,440L275,446L274,452L273,458L272,464L271,469L271,475L270,481L269,487L268,493L267,499L266,499L264,499L261,499L258,499L257,499L256,498L256,496L255,495L254,493L252,490L251,488L249,483L249,482L249,480L248,479L245,476L242,472L239,469L238,468L236,467L234,467L232,467L228,467L224,467L219,467L215,468L214,469L211,470L207,472L203,476L203,473L203,469L204,467L205,464L207,462L208,460L209,456L210,451L209,450L208,449L207,449L205,449L204,449L202,447L200,446L199,446L198,446L197,446L196,444L196,443L196,442L195,439L193,437L192,437L189,436L188,436L188,434L189,431L189,430L189,428L189,427L189,425L187,423L186,420L185,415L185,408L184,407L182,406L179,404L176,403L176,402L175,401L176,399L176,398L177,396L179,396L184,396L188,397L190,401L191,401L193,402L195,402L196,402L199,402L199,401L198,400L197,400L196,399L194,397L192,394L192,392L192,391L193,389L195,388L197,386L199,384L200,383L201,381L204,382L207,381L213,383L220,384L221,384L225,386L228,387L231,388L233,388L231,386L227,383L227,381L230,376L233,371L236,366L237,360L236,359L237,357L238,356L239,354L239,352L238,349L238,348L236,346L232,345L229,344L227,344L226,345L226,346L223,347L222,347L221,346L220,344L219,344L216,343L214,340L214,340L209,337L207,336L202,337L198,338L197,339L195,340L194,340L193,339L192,339L190,341L186,342L184,344L182,344L179,344L177,344L176,344L174,344L172,344L172,345L171,347L170,346L169,347L169,348L168,347L165,344L162,342L159,339L159,339L159,338L158,337L158,336L159,335L160,335L161,335L161,335L162,336L163,337L165,337L166,337L167,336L166,331L165,327L164,322L163,320L162,316L160,313L159,309L158,308L156,307L150,305L148,304L146,304L145,304L143,303L143,300L143,298L143,297L144,294L144,291L143,290L141,288L139,285L139,281L142,275L146,272L148,271L149,269L150,268L150,267L149,265L148,264L147,262L149,258L151,254L154,251L157,249L159,248L160,247L161,245L161,243L162,241L163,241L164,240L166,239L167,239L169,240L170,243L173,249L174,253L174,254L176,256L177,257L180,257L183,256L184,255L185,254L185,252L185,250L184,248L184,245L185,240L185,238L185,238L187,239L188,239L190,239L193,237L197,235L199,233L200,231L202,230L204,230L207,230L209,229L212,228L215,227L216,227L217,226L220,223L223,221L225,219L226,218L227,219L229,220L231,222L232,223L233,225L232,226L233,227L234,227L235,227L237,227L240,226L244,224L248,223L250,224L251,227L251,229L252,230L253,230L253,231L255,230L255,230L256,231L258,232L260,232L263,232L263,232L264,233L266,234L267,235L269,239L270,241L273,243L274,244L275,246L276,247L277,250L279,254L279,256L279,259L279,260L280,260L280,260L281,259L282,257L282,254L282,252L281,251L281,250L282,249L283,248L284,249L286,251L289,253L291,257L293,259L296,261L298,262L300,262L302,261L305,260L306,258L307,256L310,254L313,253L314,253L315,254L318,253L319,253L321,253L324,254L326,256L328,258L330,258L331,258L333,257L334,255L335,254L335,254L338,255L340,255L341,255L343,256L346,258L348,261L350,265L351,266L352,267L353,267L355,268L360,269L360,270L361,270L360,272L360,273L364,272L365,271L367,268L368,265L369,264L370,264L371,265L372,266L373,268L376,269L377,270L379,270L384,270L389,268L392,266L393,263L394,259L396,257L395,254L393,252L393,251L387,249L387,248L387,248L381,245L379,244L378,243L378,241L376,239L373,237L372,236L373,235L376,234L379,232L380,232L383,232L386,230L388,229L389,227L389,226L386,221L386,218L387,217L388,215L389,214L390,212L391,211L393,211L397,211L399,211L401,212L404,212L405,213L406,212L407,211L407,210L406,209L403,207L401,205L400,205L398,205L396,203L394,203L394,202L394,200L395,199L396,199L397,199L399,198L400,198L400,197L400,197L399,196L398,196L397,196L395,196L393,195L391,194L392,193L393,192L394,191L394,189L394,187L395,185L396,184L398,183L402,185L407,187L408,187L408,186L408,186L415,186L417,185L418,184L424,184L425,183L426,182L428,182L430,182L432,181L434,181L434,181L436,181L439,181L439,180L440,180L442,179L446,178L447,178L449,179L451,178L453,178L454,179L455,179L456,179L457,177L458,175L459,174L460,174L461,173L461,172L465,172L468,171L469,171L473,171L478,170L481,170L486,168L488,167L492,167L495,166L497,164L499,164L501,164L502,164L503,163L503,162L503,160L503,159L504,158L506,158L507,158L510,155L512,154L514,153L518,153L522,153L525,155L527,156L529,157L531,158L532,158L534,158L535,157L535,156L536,155L540,154L541,155L543,159L544,163L547,169L548,172L547,174L547,176L547,179L546,181L547,183L550,184L556,183L559,182L560,182L561,181L562,179L563,179L564,180L565,182L566,184L566,186L567,188L568,189L569,188L570,187L570,186L569,186L569,185L569,184L570,183L572,184L574,184L578,187L580,187L580,187L582,187L584,186L585,185L585,184L586,184L587,185L587,186L586,188L585,189L582,191L581,194L581,197L582,198L582,199L583,200L583,201L584,200L587,197L588,196L590,196L593,196L595,196L596,197L598,198L598,198L599,197L599,195L599,194L602,191L604,189L605,189L607,189L608,189L610,187L612,185L612,183L612,182L613,181L616,181L617,180L619,179L623,176L625,174L628,173L629,173L630,172L632,170L633,170L633,173L632,177L631,178L628,178L628,179L628,181L629,181L629,182L631,183L635,186L640,189L646,193L650,196L651,197L652,199L656,203L659,207L664,214L669,220L674,228L677,232L684,241L685,243L689,249L692,254L695,258L696,258L696,257L696,256L697,255L698,254L699,253L700,253L701,252L701,251L701,249L700,248L701,246L701,246L702,245L703,245L703,243L705,243L706,243L707,243L708,244L709,245L710,245L711,244L712,245L712,247L711,249L711,250L712,251L715,250L717,250L717,251L718,252L718,253L718,254L719,255L721,254L723,253L726,253L729,254L731,253L733,252L735,252L737,251L738,249L738,248L739,247L741,247L743,246L744,245L745,244L747,243L748,243L752,244L754,244L757,246L758,247L760,249L762,250L763,252L764,254L766,258L767,259L769,259L770,259L772,259L776,261L778,261L779,261L779,262L779,264L780,265L782,267L783,268L785,270L785,271L786,272L788,271L790,271L796,271L797,271L798,272L799,271L800,271L802,271L802,269L803,268L805,266L806,264L807,262L808,262L809,262L809,264L809,265L808,266L808,268L810,267L812,269L815,272L816,273L818,274L819,274L821,274L822,275L823,277L821,277L818,277L816,278L816,278L815,280L814,281L814,283L815,285L815,289L815,291L813,294L812,295L811,296L809,297L806,298L802,300L801,301L800,303L800,304L800,306L800,310L800,313L801,317L803,322L803,324L805,326L806,327L806,329L805,331L805,334L804,335L802,336L800,336L798,339L797,340L794,343L793,343L792,343L791,341L790,340L789,340L788,341L785,341L782,341L781,342L779,343L776,342L774,342L772,342L769,341L764,340L762,340L761,340L761,342L761,344L761,346L760,355L759,362L758,368L758,372L757,377L756,381L756,383L756,384L757,385L759,386L762,386L762,386L763,388L763,390L763,392L763,393L762,394L761,394L760,394L758,393L757,393L755,394L752,395L752,395L750,395L749,394L748,392L746,391L745,393L740,395L735,398L732,399L731,399L728,400L726,401L724,402L721,404L718,405L717,407L715,408L716,409L717,410L718,410L720,410L723,409L725,410L727,410L727,411L727,412L726,412L726,413L726,413L725,416L726,418L726,421L727,424L727,425L727,427L728,428L729,431L731,432L733,437L735,440L736,443L736,445L736,446L738,447L738,449L739,450L739,451L739,451L736,451L734,452L732,454L732,454L732,455L732,456L734,456L736,457L736,458L734,459L731,461L730,462L729,464L730,465L730,468L731,471L733,474L733,475L733,476L732,476L729,474L726,471L724,471L720,471L718,471L716,471L715,469L713,468L711,467L710,465L710,464L708,465L706,465L705,465L703,465L700,464L698,463L695,464L694,464L689,465L684,464L681,465L679,465L678,465L676,465L674,465L670,464L669,464L668,464L663,466L660,467L654,467L649,467L647,467L646,468L645,470L644,471L639,471L633,470L628,468L624,466L619,464L616,462L616,463L615,464L614,464L611,464L610,466L607,467L605,468L604,469L603,477L602,480L604,485L603,485L601,483L600,483L598,482L592,482L590,481L590,480L588,479L586,479L580,477L578,477L572,476L571,476L570,476L568,477L566,478L564,477L561,479L560,480L558,483L557,484L557,486L556,487L555,489L555,490Z","borders":"M551,526L551,525L551,524L550,523L549,524L550,524L551,526L551,526M563,552L562,552L560,552L559,552L560,550L560,550L560,550L559,549L558,549L558,547L558,546L559,546L559,546L561,547L562,548L563,548L563,550L563,552L563,552M575,550L574,551L573,551L572,550L573,550L574,549L574,549L575,549L575,550M469,619L468,619L465,619L460,617L456,615L453,613L453,613L452,614L451,616L450,618L449,621L444,621L439,621L436,622L433,624L433,626L432,628L430,634L428,639L427,642L426,644L423,647L419,649L417,650L416,651L416,652L415,652L414,652L412,652L408,653L405,654L400,655L397,655L396,656L396,656L396,658L397,659L397,660L396,661L395,663L394,666L392,667L390,668L388,670M376,670L376,669L373,666L371,664L370,664L368,665L366,665L363,664L362,663L360,661L359,659L358,659L356,659L356,657L356,656L357,655L357,652L356,650L355,649L355,648L356,647L356,646L357,644L356,641L356,637L356,634L356,632L347,631L339,630L339,630L336,625L334,621L332,619L327,616L325,615L323,612L321,610L321,607L321,606L320,605L320,605L319,605L313,601L311,600L308,600L307,600L305,599L303,600L302,600L300,600L299,599L297,596L294,594L292,593L289,591L285,590L283,589L282,589L282,588L282,587L282,586L281,584L281,583L279,582L277,582L274,581L271,580L269,579L266,579L264,579L263,579L262,580L261,582L260,583L259,583L258,583L256,582L252,581L246,580L242,581L239,582L235,584L231,586L230,587L227,593L226,593L225,594L223,594L221,594L217,595L215,595L209,594M203,476L207,472L211,470L214,469L215,468L219,467L224,467L228,467L232,467L234,467L236,467L238,468L239,469L242,472L245,476L248,479L249,480L249,482L249,483L251,488L252,490L254,493L255,495L256,496L256,498L257,499L258,499L261,499L264,499L266,499L267,499M-3,427L-2,428L-0,429L1,430L1,431L4,430L7,431L9,432L10,433L11,434L13,435L14,434L16,432L17,432L17,432L18,432L20,433L20,434L20,435L22,437L23,440L25,442L25,443L24,443L24,444L25,445L26,446L28,446L28,447L29,447L29,448L29,449L28,450L29,452L30,453L31,454L31,458L31,460L30,462L29,463L26,465L26,466L26,467L26,468L26,471L26,473L26,474L25,474L27,476L29,478L31,479L34,479L36,480L38,482L40,485L42,490L43,491L43,492L43,493L43,493L42,491L40,488L38,489L37,490L33,496L32,496L30,496L28,495L27,495L26,495L26,496L26,497L26,498L26,499L26,500L27,502L27,502L26,504L26,505L25,505L26,507L26,509L27,510L25,513L25,515L25,517L24,520L24,521L24,521L25,522L26,523L26,523L26,524L24,525L24,526L23,527L22,528L21,530L19,531L18,532L18,533L21,534L21,536L24,539L24,540L23,541L23,541L23,542L23,543L23,545L22,546L22,547L24,549L25,551L25,552L24,553L24,555L24,555L23,554L22,553L21,553L20,553L18,554L16,555L14,555L13,556L12,556L12,555L12,554L13,550L13,549L13,548L12,547L11,546L10,546L8,547L6,547L3,546L1,545L0,545L-3,542L-4,541L-5,540L-7,539L-10,539L-11,538L-13,537L-14,537L-17,539L-21,541L-23,541L-23,537L-24,536L-24,536L-25,535L-26,535L-28,536L-30,536M558,543L558,544L558,545L554,546L552,548L552,550L551,550L550,551L549,551L548,549L547,548L545,547L541,546L538,545L534,546L530,548L529,549L529,550L529,551L529,552L529,552L528,553L527,552L525,551L525,553L524,555L524,557L525,559L525,563L527,563L529,562L531,561L533,561L535,562L539,562L542,561L542,562L543,561L544,561L544,562L547,561L549,561L551,561L552,561L553,563L554,565L556,565L560,565L561,563L562,562L564,562L565,561L566,560L567,560L569,559L569,560L570,561L570,562L570,563L570,563L573,563L574,564L574,565L574,567L575,568L576,568L580,565L581,565L581,566L583,568L584,569L585,569L586,567L587,565L589,565L591,564L592,564L597,564L599,564L602,564L604,563L606,562L607,561L609,561L611,561L612,561L612,562L612,565L612,567L614,570L615,571L616,572L617,573L616,574L615,575L615,575L615,576L615,577L616,580L617,582L619,584L621,584L622,584L622,582L624,581L625,581L627,580L632,582L636,583L638,585L639,586L638,590L638,592L638,594L640,596L641,598L641,601L642,601L642,602L642,605L642,607L642,607L644,608L646,610L647,612L646,613L645,615L643,616L642,616L642,616L641,615L639,613L637,613L634,613L633,613L631,612L629,613L628,614L627,615L625,616L623,617L619,618L617,618L616,618L616,617L618,616L618,615L618,613L616,613L616,613L615,613L613,612L611,613L607,614L601,619L598,621L596,625L590,627L586,629L582,633L579,635L578,635L576,635L575,634L573,631L572,627L571,624L571,620L571,616L572,611L572,606L573,604L573,603L572,603L571,603L569,604L568,604L567,603L567,601L568,597L566,593L562,590L558,590L555,591L553,593L551,597L549,600L547,602L545,603L545,604L545,605L546,608L546,611L545,613L543,614L542,614L540,613L540,612L537,612L533,613L530,614L529,616L528,618L529,621L529,623L528,624L527,625L526,626L524,624L521,622L519,620L518,620L518,620L517,620L517,621L517,621L516,622L514,622L513,622L513,623L511,624L508,625L506,626L505,628L505,628L504,628L501,630L499,629L496,627L495,625L494,624M553,554L552,555L550,555L550,554L549,553L549,553L549,553L551,553L552,553L553,554L553,554M-23,541L-23,541L-24,542L-27,543L-30,545M576,670L576,669L576,668L576,667L576,665L574,664L574,661L572,657L571,656L570,655L568,653L567,652L568,650L569,649L572,645L574,643L576,642L578,642L579,642L580,640L582,639L585,636L586,634L588,633L590,633L592,632L594,631L596,630L599,630L604,629L606,629L612,628L619,627L620,627L623,628L625,628L626,628L629,626L633,624L636,622L637,622L639,622L640,622L642,623L643,624L644,623L646,622L648,623L652,624L653,624L654,628L655,628L658,627L660,628L662,629L663,630L664,631L666,633L666,634L667,636L667,642L667,643L666,644L666,645L667,646L669,646L670,647L671,647L672,650L673,651L674,651L677,650L679,648L680,648L681,651L683,652L685,653L686,653L687,656L689,659L690,661L691,664L692,665L693,667L693,668L693,670M1030,384L1026,385L1026,385L1024,382L1023,381L1020,380L1018,378L1014,377L1012,375L1011,373L1006,367L1002,363L1002,362L1000,361L999,361L997,361L996,360L995,359L995,356L995,354L994,354L989,356L986,357L983,356L978,355L975,354L971,352L967,353L965,352L962,350L960,349L957,349L953,349L946,350L944,351L940,353L938,354L933,354L930,354L927,355L925,356L922,356L921,356L920,356L917,357L916,357L914,356L912,356L910,356L910,357L909,357L908,356L906,353L905,352L904,351L903,350L903,348L902,345L903,341L904,340L904,339L905,337L905,336L905,334L903,333L902,330L902,329L902,327L902,323L902,323L901,322L900,320L900,318L897,315L896,314L895,313L893,313L891,311L889,309L887,307L887,306L886,305L885,302L884,301L883,300L882,299L882,299L879,299L878,298L877,297L876,296L875,295L874,295L874,296L873,297L872,297L871,297L870,297L869,296L867,294L865,294L863,295L861,296L860,296L858,296L857,296L856,295L854,295L851,294L849,293L848,291L847,289L845,289L843,288L840,288L838,287L837,287L837,287L837,286L837,285L837,284L837,283L837,283L835,282L833,282L832,281L831,280L831,279L832,278L832,278L832,277L832,276L831,275L831,274L830,273M556,491L556,491L558,490L559,491L561,492L561,493L561,493L558,496L555,497L554,497L554,497L553,500L552,500L550,501L549,502L547,505L542,509L542,510L542,511L544,511L546,512L547,513L551,512L552,512L553,513L554,517L555,518L557,519L558,519L560,520L562,520L564,519L566,520L566,520L566,514L567,515L568,515L569,515L569,514L570,512L569,510L570,509L570,509L571,509L571,510L571,511L572,512L573,512L574,514L574,515L575,518L577,518L578,518L580,518L581,518L581,520L581,521L581,522L582,522L583,521L585,521L586,522L587,523L590,525L591,525L594,525L595,526L596,526L597,525L600,526L600,526L600,527L593,531L593,532L591,534L590,534L589,534L586,533L586,534L585,534L585,535L586,536L586,537L585,538L583,537L583,537L583,537L582,537L581,537L579,540L578,541L578,542L577,543L575,543L574,544L573,545L572,544L572,544L571,543L570,544L569,544L568,543L566,542L565,542L561,542L559,543L558,543L557,544L552,545L551,544L550,543L550,541L548,541L547,541L546,540L546,539L546,539L546,538L550,535L552,533L553,532L553,532L553,531L553,531L551,530L551,529L551,529L551,528L550,526L547,523L546,523L546,523L545,526L544,527L541,529L539,530L534,533L533,533L532,533L531,533L529,531L527,530L526,531L525,532L525,534L524,535L523,536L525,542L525,543L524,543L525,545L524,546L521,545L518,545L512,546L512,546L512,547L512,547L515,547L518,547L519,547L519,548L518,549L518,549L515,549L515,550L515,550L516,552L517,552L517,553L516,553L516,554L515,553L515,553L515,554L515,554L514,555L513,555L512,555L512,557L511,560L510,562L509,563L507,563L506,563L504,562L501,562L498,561L494,560L490,562L489,563L489,564L488,564L486,570L487,571L487,571L492,573L492,573L493,574L493,576L493,577L495,577L497,577L499,577L500,577L502,578L502,578L502,579L500,585L501,587L501,590L502,593L505,595L506,596L507,597L507,598L506,600L506,602L504,604L503,604L501,607L500,610L497,614L496,616L495,622L494,624L494,623L493,623L491,623L490,622L489,622L488,622L485,623L483,622L480,620L475,619L469,619L469,616L469,613L469,608L471,604L471,603L471,603L470,602L467,601L465,600L464,599L462,598L461,597L458,596L456,595L454,595L453,596L452,596L451,596L447,593L440,587L435,584L432,582L431,581L429,580L425,575L422,576L418,573L414,570L414,569L409,564L405,561L401,557L398,555L393,551L391,548L390,547L389,546L389,538L387,535L385,532L384,529L383,523L382,519L381,518L379,516L376,514L373,512L372,512L372,513L371,513L370,514L368,514L367,514L366,514L362,513L361,512L359,512L354,512L353,512L348,508L346,507L346,506L346,505L347,503L348,502L348,501L347,499L347,498L348,497L349,497L350,497L349,496L349,495L348,494L345,492L345,492L345,491L346,491L346,489L346,488L347,487L347,486L346,486L346,485L344,483L342,483L337,482L335,482L333,481L332,477L332,476L331,476L329,476L327,475L326,474L324,471L322,468L320,471L319,471L317,470L315,470L314,470L313,471L313,472L314,473L315,474L317,477L318,479L318,480L318,480L318,480L317,480L317,480L316,480L316,479L316,477L315,477L314,476L313,475L311,475L310,474L309,475L308,476L308,478L306,481L305,482L303,482L297,481L295,482L294,483L291,486L289,487L288,488L288,493L287,498L288,500L289,501L289,501L288,502L288,502L287,503L286,503L284,502L282,502L277,501L272,500L267,499L268,493L269,487L270,481L271,475L271,469L272,464L273,458L274,452L275,446L276,440L277,434L278,429L279,423L279,417L280,411L281,405L284,405L287,404L289,404L293,403L297,403L300,402L304,401L307,401L309,400L313,400L319,399L322,398L325,398L328,397L330,397L331,399L334,401L336,403L338,404L341,406L343,408L345,410L348,412L350,414L352,416L355,418L357,420L359,422L362,424L364,426L366,428L369,430L371,432L372,433L372,435L373,438L375,440L377,442L379,446L381,448L383,450L385,454L387,456L389,456L392,456L396,456L399,455L403,455L407,455L410,454L415,455L419,455L422,456L425,456L429,457L431,457L433,457L434,457L436,456L438,455L440,454L442,454L444,455L445,457L447,459L448,461L450,463L453,464L454,467L456,471L457,473L458,476L460,475L462,474L464,473L463,476L463,479L463,483L462,486L462,490L461,493L461,496L461,498L465,498L467,499L471,499L471,502L471,505L472,509L472,512L473,516L474,518L474,520L475,520L476,521L481,521L484,520L487,520L490,520L494,520L496,520L497,520L498,520L499,521L500,522L501,523L502,524L501,526L501,528L500,530L502,531L503,532L505,534L508,535L509,535L511,534L511,534L511,532L510,531L510,529L511,528L512,526L514,524L516,521L519,519L520,518L520,515L522,514L524,513L526,512L527,511L530,508L532,507L534,506L537,505L540,503L542,500L544,498L546,496L547,496L548,497L549,497L550,497L551,495L551,494L552,493L554,493L556,491L555,490L555,489L556,487L557,486L557,484L558,483L560,480L561,479L564,477L566,478L568,477L570,476L571,476L572,476L578,477L580,477L586,479L588,479L590,480L590,481L592,482L598,482L600,483L601,483L603,485L604,485L602,480L603,477L604,469L605,468L607,467L610,466L611,464L614,464L615,464L616,463L616,462L619,464L624,466L628,468L633,470L639,471L644,471L645,470L646,468L647,467L649,467L654,467L660,467L663,466L668,464L669,464L670,464L674,465L676,465L678,465L679,465L681,465L684,464L689,465L694,464L695,464L698,463L700,464L703,465L705,465L706,465L708,465L710,464L710,465L711,467L713,468L715,469L716,471L718,471L720,471L724,471L726,471L729,474L732,476L733,478L733,479L733,480L733,480L727,481L726,482L725,485L720,488L717,489L716,489L714,491L707,496L703,499L701,501L700,502L700,503L700,504L696,510L693,511L690,512L689,513L686,514L680,514L678,514L674,514L673,514L671,516L670,520L669,521L669,522L668,524L668,527L667,528L666,530L665,532L663,533L662,531L661,532L660,533L658,533L657,533L655,535L651,535L650,535L649,530L648,528L648,527L647,527L642,532L639,533L637,533L634,532L634,532L633,533L633,534L634,536L634,536L633,536L631,537L630,538L626,542L623,543L620,544L619,545L618,545L617,547L616,549L616,551L616,552L616,553L617,554L618,556L617,557L617,558L616,560L614,560L612,561M823,277L821,277L818,277L816,278L816,278L815,280L814,281L814,283L815,285L815,289L815,291L813,294L812,295L811,296L809,297L806,298L802,300L801,301L800,303L800,304L800,306L800,310L800,313L801,317L803,322L803,324L805,326L806,327L806,329L805,331L805,334L804,335L802,336L800,336L798,339L797,340L794,343L793,343L792,343L791,341L790,340L789,340L788,341L785,341L782,341L781,342L779,343L776,342L774,342L772,342L769,341L764,340L762,340L761,340L761,342L761,344L761,346L760,355L759,362L758,368L758,372L757,377L756,381L756,383L756,384L757,385L759,386L762,386L762,386L763,388L763,390L763,392L763,393L762,394L761,394L760,394L758,393L757,393L755,394L752,395L752,395L750,395L749,394L748,392L746,391L745,393L740,395L735,398L732,399L731,399L728,400L726,401L724,402L721,404L718,405L717,407L715,408L716,409L717,410L718,410L720,410L723,409L725,410L727,410L727,411L727,412L726,412L726,413L726,413L725,416L726,418L726,421L727,424L727,425L727,427L728,428L729,431L731,432L733,437L735,440L736,443L736,445L736,446L738,447L738,449L739,450L739,451L739,451L736,451L734,452L732,454L732,454L732,455L732,456L734,456L736,457L736,458L734,459L731,461L730,462L729,464L730,465L730,468L731,471L733,474L733,475L733,476L732,476M24,555L24,555L24,557L23,564L24,565L25,566L25,567L25,569L25,570L24,572L24,573L25,575L25,575L26,576L27,576L27,577L27,586L27,587L28,587L30,587L31,589L32,590L33,593L34,594L38,595L42,596L44,598L44,599L42,599L39,599L37,601L36,603L36,604L36,605L37,608L37,609L37,611L37,612L37,613L34,614L31,615L25,619L24,620L23,624L22,625L21,624L19,623L19,625L18,626L17,627L18,631L18,633L17,634L14,637L13,638L13,639L14,640L17,647L17,650L19,650L20,650L20,650L20,651L20,652L19,653L22,654L22,656L23,662L23,663L21,665L20,666L20,668L21,668L24,670M356,659L357,660L356,661L356,662L355,664L354,665L354,666L353,667L352,667L352,669L352,670M43,493L44,493L45,499L46,501L47,503L47,504L47,506L48,507L50,508L50,510L51,513L53,514L59,517L63,519L64,520L67,519L70,521L71,521L77,518L79,516L82,516L84,515L87,513L90,512L93,511L96,510L100,509L103,508L105,509L107,513L109,516L109,518L108,518L105,519L104,520L104,521L104,522L104,522L106,525L106,526L106,527L106,528L105,528L103,528L101,528L100,528L99,529L99,530L100,531L103,534L103,535L103,536L104,537L105,538L106,539L108,544L109,544L113,544L114,545M693,667L696,665L698,663L701,661L703,659L706,657L708,655L708,655L708,655L709,656L710,656L711,655L712,655L713,655L713,656L713,659L713,661L715,664L717,668L718,670M90,446L89,447L88,448L86,448L86,448L84,448L84,449L84,450L83,451L84,452L85,452L85,455L86,456L88,458L90,460L90,462L90,463L88,465L86,466L85,466L84,466L83,465L82,463L80,462L78,462L77,462L75,461L73,459L72,458L72,457L73,456L68,452L65,451L64,451L59,453L58,453L55,453L55,453L56,454L55,454L50,453L48,453L44,451L42,450L41,451L38,450L35,450L32,450L30,449L29,449M708,655L706,656L703,656L702,656L700,656L697,656L693,655L688,654L686,653M636,622L635,622L635,622L632,620L632,619L635,617L638,616L639,615L639,615L640,616L641,617L642,616M43,491L45,491L48,491L49,492L50,493L50,494L49,496L50,497L51,497L52,497L53,499L54,500L58,500L59,500L61,500L61,501L61,502L60,504L60,505L60,506L62,508L63,509L62,511L62,515L63,517L63,519M70,521L71,518L71,516L71,515L70,514L70,513L71,513L72,513L73,514L74,513L73,511L72,509L71,508L71,508L71,507L72,507L74,506L74,505L75,504L72,502L69,502L68,499L67,498L66,496L64,495L64,492L62,490L60,489L60,489L61,488L61,488L66,490L66,489L67,489L68,488L69,486L69,485L66,481L63,478L62,474L61,471L62,470L62,470L66,468L67,468L67,467L66,466L65,464L65,463L64,462L62,462L59,459L59,459L59,458L59,458L61,458L61,458L61,457L60,456L59,454L59,453M64,473L65,472L64,472L64,471L63,472L63,473L64,473L64,473M57,460L57,460L56,459L56,459L57,458L57,458L58,458L58,459L57,460","grat":"M-30,-3L-16,-30M-30,176L60,-30M-30,415L9,308L133,-30M-4,670L94,337L203,-30M109,670L180,359L270,-30M220,670L268,377L335,-30M328,670L357,389L399,-26M435,670L446,395L462,-22M542,670L535,395L525,-22M649,670L625,390L588,-25M758,670L713,380L651,-30M868,670L801,363L716,-30M981,670L888,342L783,-30M1030,473L973,315L852,-30M-30,596L12,610L64,624L116,637L169,649L221,658L275,666L304,670M696,670L703,669L756,661L809,653L862,642L914,630L966,616L1018,600L1030,596M-30,459L2,470L49,485L97,498L145,510L194,521L243,530L292,537L341,543L390,547L440,550L490,551L539,550L589,548L638,545L688,539L737,533L786,524L834,515L883,503L931,491L978,476L1025,461L1030,459M-30,321L0,333L43,348L86,361L130,374L174,385L219,394L264,402L309,409L354,414L399,418L445,421L490,422L536,421L581,419L627,416L672,411L717,405L762,398L807,389L851,378L895,366L939,353L982,339L1025,323L1030,321M-30,182L6,197L44,212L83,225L123,238L163,249L203,259L244,268L285,275L326,281L367,286L408,289L450,292L491,293L533,292L574,291L616,288L657,283L698,278L739,271L780,263L820,253L860,242L900,230L939,217L978,203L1016,187M-30,38L-13,46L20,62L54,76L89,90L124,102L160,113L196,124L232,133L269,140L306,147L343,153L380,157L417,160L455,162L492,163L529,163L567,161L604,158L641,154L678,149L715,143L752,136L788,127L825,118L860,107L896,95L931,82L966,68M144,-30L166,-22L198,-12L230,-3L262,4L294,11L327,17L360,22L393,26L426,29L460,31L493,31L526,31L559,30L593,27L626,24L659,19L691,14L724,7L756,0L789,-8L820,-18L852,-28L856,-30","rivers":["M558,526L531,517L511,494L496,458L477,432L454,421L419,396L389,386","M487,621L438,591L411,564L373,512L342,475L343,449","M749,429L703,433L665,433L641,407L623,393","M788,316L741,281L700,267L642,228L606,184L580,160L565,122","M362,197L292,232L232,234L222,290L219,339","M651,471L612,459L573,438L527,421","M595,483L564,474L546,452","M415,199L443,253L457,318L474,344"],"lakes":["M597,374L608,366L629,374L658,366L688,355L696,359L676,369L650,377L621,388Z","M325,395L344,372L372,372L385,394L373,426L349,450L326,429Z","M656,481L673,469L697,472L692,480L671,485Z","M763,319L776,311L791,316L777,323Z"],"regions":{"tigra":"M595,496L588,432L624,385L695,377L751,386L754,457L692,497Z","massag":"M300,473L342,361L429,381L490,427L471,491L383,515Z","sauro":"M131,334L181,214L264,206L319,267L289,354L195,376Z","saka_c":"M464,395L458,305L532,253L631,273L639,350L572,407Z","altai":"M744,348L728,260L771,225L828,251L819,320Z","usun":"M599,496L608,402L677,374L746,379L762,450L702,498Z","kangju":"M412,509L436,420L508,396L573,433L573,502L509,538Z","xiongnu":"M825,385L803,217L884,208L938,381Z","turk":"M197,455L271,260L468,215L686,201L853,218L905,337L836,435L636,519L382,533Z","karluk":"M547,498L551,434L625,395L724,391L734,455L653,496Z","oguz":"M251,479L270,364L395,353L490,409L500,486L383,507Z","kimak":"M647,349L604,250L650,166L763,187L818,280L762,345Z","kypchak":"M145,351L163,249L249,203L408,186L590,173L722,221L706,329L606,379L463,434L280,418Z","akorda":"M313,448L334,282L437,213L563,239L605,366L574,458L461,498Z","mogol":"M567,497L589,393L675,359L764,358L781,446L693,502Z","nogai":"M131,334L166,237L249,203L331,243L316,358L228,396Z","zh_s":"M490,512L490,460L536,421L643,394L734,395L737,472L597,522Z","zh_m":"M394,366L394,262L469,176L621,175L756,228L802,324L677,379L535,400Z","zh_k":"M145,391L179,253L308,232L394,262L420,368L378,455L255,453Z"},"places":{"issyk":[677,454],"berel":[806,274],"chigu":[694,479],"otrar":[506,477],"suyab":[636,473],"taraz":[564,475],"balasagun":[637,474],"yangikent":[396,403],"sygnak":[498,443],"turkestan":[505,466],"kozybasy":[608,446]},"labels":{"tigra":[650,421],"massag":[395,436],"sauro":[231,292],"saka_c":[548,331],"altai":[785,317],"usun":[684,428],"kangju":[496,458],"xiongnu":[850,256],"turk":[535,349],"karluk":[648,435],"oguz":[417,464],"kimak":[703,256],"kypchak":[466,311],"akorda":[465,357],"mogol":[692,420],"nogai":[239,293],"zh_s":[688,418],"zh_m":[583,291],"zh_k":[283,341]},"arrows":{"hun":"M910,292L819,322L743,341L673,346L587,360L465,354L345,333L226,314L131,302","turk":"M844,279L787,340L726,404L658,449L584,460L490,437L383,394L262,358L177,335","kyp":"M751,247L647,269L533,297L415,318L294,324L191,314L112,305","mongol":"M905,275L831,298L786,335L734,395L676,439L603,464L533,474L510,476","kazakh":"M498,442L532,422L573,425L603,442"},"water":[["Сырдарья",415,381,-8],["Амударья",390,538,-38],["Или",730,437,0],["Иртыш",628,200,-38],["Урал",281,222,12],["Чу",542,419,-20],["Тобол",445,251,-60]],"lakeNames":[["Балхаш",647,393],["Арал",355,411],["Иссык-Куль",665,497],["Каспийское море",184,448],["Зайсан",780,330]],"alabels":{"hun":[["из Монголии",877,332,"middle"],["к Волге и в Европу, IV в.",174,276,"start"]],"turk":[["с Алтая",832,251,"middle"],["поход Истеми к Каспию, 554 г.",172,305,"start"]],"kyp":[["с Иртыша",753,213,"middle"],["на запад — к Волге и Дунаю",158,272,"start"]],"mongol":[["Чингисхан, 1219 г.",816,257,"middle"],["осада Отрара",519,502,"middle"]],"kazakh":[["Керей и Жанибек, 1465",539,391,"middle"]]}};
+const NS = "http://www.w3.org/2000/svg";
+const $ = (id) => document.getElementById(id);
+const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+
+const C = {
+  saka:"#D9A04A", usun:"#C86A58", kangju:"#A6B35C", sarmat:"#A98466", hun:"#B5566E", turk:"#3FA395",
+  karluk:"#5E9FC2", oguz:"#6E9E72", kimak:"#8A7DB8", kypchak:"#5E7FB8", akorda:"#9A72B8", mogol:"#B87099",
+  nogai:"#7483B0", zs:"#E3B04B", zm:"#8FB8A8", zk:"#C9824A"
+};
+const REG = {
+  tigra:{n:"Саки-тиграхауда", c:C.saka}, massag:{n:"Массагеты", c:C.saka}, saka_c:{n:"Саки Сарыарки", c:C.saka},
+  altai:{n:"Саки Алтая", c:C.saka}, sauro:{n:"Савроматы", c:C.sarmat},
+  usun:{n:"Усуни", c:C.usun}, kangju:{n:"Канглы", c:C.kangju}, sauro2:{n:"Сарматы", c:C.sarmat, key:"sauro"},
+  xiongnu:{n:"Хунну", c:C.hun}, turk:{n:"Тюркский каганат", c:C.turk},
+  karluk:{n:"Карлуки", c:C.karluk}, oguz:{n:"Огузы", c:C.oguz}, kimak:{n:"Кимаки", c:C.kimak},
+  kypchak:{n:"Дешт-и-Кыпчак", c:C.kypchak}, akorda:{n:"Ак Орда", c:C.akorda}, mogol:{n:"Моголистан", c:C.mogol},
+  nogai:{n:"Ногайская Орда", c:C.nogai}, zh_s:{n:"Старший жуз", c:C.zs}, zh_m:{n:"Средний жуз", c:C.zm}, zh_k:{n:"Младший жуз", c:C.zk}
+};
+const PLACES = {
+  issyk:"Иссык · Золотой человек", berel:"Берель", chigu:"Чигучэн", suyab:"Суяб", taraz:"Тараз", balasagun:"Баласагун",
+  otrar:"Отрар", yangikent:"Янгикент", sygnak:"Сыгнак", turkestan:"Туркестан", kozybasy:"Козыбасы"
+};
+const ERAS = [
+  { nm:"Саки", dt:"VIII–III до н.э.", yrs:"VIII–III века до н. э.", ttl:"Эпоха саков",
+    acc:C.saka, reg:["tigra","massag","saka_c","altai","sauro"], pl:["issyk","berel"], arrow:null,
+    txt:"Ираноязычные кочевники-скотоводы, лучшие всадники древнего мира. Их визитная карточка — «звериный стиль» и Золотой человек из Иссыкского кургана.",
+    src:["Геродот, V в. до н. э. — о массагетах и царице Томирис","Бехистунская надпись Дария I — «саки-тиграхауда»","Раскопки: Иссык (К. Акишев, 1969–1970), Берель"],
+    dna:.16, dtx:"Почти все линии — западноевразийские, наследие бронзового века." },
+  { nm:"Усуни и канглы", dt:"II до н.э. – V", yrs:"II век до н. э. — V век н. э.", ttl:"Усуни и канглы",
+    acc:C.usun, reg:["usun","kangju","sauro2"], pl:["chigu"], arrow:null,
+    txt:"Первые крупные государственные союзы. Усуни держат Жетысу, канглы — среднюю Сырдарью. Их имена живут до сих пор: роды уйсін и қаңлы входят в Старший жуз.",
+    src:["Китайские хроники «Шицзи» и «Ханьшу»","Поездка посла Чжан Цяня на запад, II в. до н. э.","Курганы усуней в Жетысу"],
+    dna:.28, dtx:"К западным линиям добавляется всё больше восточноазиатских." },
+  { nm:"Гунны", dt:"II до н.э. – V", yrs:"II век до н. э. — V век н. э.", ttl:"Волна гуннов",
+    acc:C.hun, reg:["xiongnu","usun","kangju"], pl:[], arrow:"hun", arrowC:C.hun,
+    txt:"Кочевники хунну из Монголии двигаются на запад через степи Казахстана и к IV веку доходят до Европы. Это первая большая волна с востока.",
+    src:["Китайские хроники о хунну","Римский историк Аммиан Марцеллин, IV в. — о гуннах в Европе"],
+    dna:.4, dtx:"Восточная волна: в древней ДНК заметно больше восточноазиатских предков." },
+  { nm:"Тюрки", dt:"552 – VIII в.", yrs:"552 год — VIII век", ttl:"Тюркский каганат",
+    acc:C.turk, reg:["turk"], pl:["suyab"], arrow:"turk", arrowC:C.turk,
+    txt:"Тюрки с Алтая объединяют степь от Маньчжурии до Каспия. Ставка западных каганов — Суяб в Жетысу. Тюркский язык становится общим для всей степи.",
+    src:["Орхонские надписи: памятник Кюль-тегину, 732 г.","Китайские и византийские хроники"],
+    dna:.5, dtx:"Восточный и западный компоненты уравниваются." },
+  { nm:"Карлуки и огузы", dt:"VIII – X вв.", yrs:"VIII — X века", ttl:"Наследники каганата",
+    acc:C.karluk, reg:["karluk","oguz","kimak"], pl:["taraz","balasagun","otrar","yangikent"], arrow:null,
+    txt:"На месте каганата — три тюркских государства: карлуки в Жетысу, огузы на Сырдарье, кимаки на Иртыше. Растут города Шёлкового пути.",
+    src:["Ибн Хордадбех «Книга путей и стран», IX в.","Персидская география «Худуд аль-алам», 982 г.","Аль-Идриси о кимаках"],
+    dna:.52, dtx:"Смешанный тюркский генофонд складывается по всей степи." },
+  { nm:"Кыпчаки", dt:"XI – XIII вв.", yrs:"XI — начало XIII века", ttl:"Дешт-и-Кыпчак",
+    acc:C.kypchak, reg:["kypchak"], pl:[], arrow:"kyp", arrowC:C.kypchak,
+    txt:"Кыпчаки занимают степь от Иртыша до Дуная — её так и называют: Дешт-и-Кыпчак, «Кыпчакская степь». Казахский язык и сегодня входит в кыпчакскую группу тюркских языков.",
+    src:["Махмуд Кашгари «Диван лугат ат-тюрк», XI в.","Русские летописи о половцах","Путешественник Гильом де Рубрук, XIII в."],
+    dna:.55, dtx:"Кыпчаки соединяют западные и восточные линии на огромной территории." },
+  { nm:"Золотая Орда", dt:"XIII – XV вв.", yrs:"1219 год — XV век", ttl:"Монголы и Орда",
+    acc:C.akorda, reg:["akorda","mogol","nogai"], pl:["sygnak","otrar"], arrow:"mongol", arrowC:C.mogol,
+    txt:"Походы Чингисхана 1219–1221 годов. Монголы Улуса Джучи быстро растворяются в кыпчакской среде и перенимают её язык. Столица Ак Орды — Сыгнак на Сырдарье.",
+    src:["Рашид ад-Дин «Джами ат-таварих», XIV в.","Арабский путешественник Ибн Баттута, XIV в.","«Сокровенное сказание монголов», XIII в."],
+    dna:.6, dtx:"Широко расходится гаплогруппа C2 — сегодня самая частая у казахов." },
+  { nm:"Казахи", dt:"1465 г.", yrs:"1465 год", ttl:"Казахское ханство",
+    acc:"#E3B04B", reg:["zh_s","zh_m","zh_k"], pl:["kozybasy","turkestan"], arrow:"kazakh", arrowC:"#F0CE82",
+    txt:"Султаны Керей и Жанибек уходят из ханства Абулхаира в долину реки Чу. Их людей называют «казак» — «вольные, свободные люди». Так рождается Казахское ханство, а из него — три жуза.",
+    src:["Мухаммед Хайдар Дулати «Тарих-и Рашиди», 1546 г.","Кадыргали Жалаири «Сборник летописей», 1602 г.","Шежіре — устные родословные казахских родов"],
+    dna:.58, dtx:"Итог — смешанный генофонд: около 58% материнских линий восточные, 42% — западные." },
+];
+
+// ---- draw base map
+$("land").setAttribute("d", GEO.land);
+$("landclipPath").setAttribute("d", GEO.land);
+$("kz").setAttribute("d", GEO.kz);
+$("borders").setAttribute("d", GEO.borders);
+GEO.lakes.forEach((d) => el("path", { d, fill: "#26374A", stroke: "#56708A", "stroke-width": "1" }, $("lakes")));
+GEO.rivers.forEach((d) => el("path", { d, fill: "none", stroke: "#6F93B5", "stroke-width": "1.6", "stroke-opacity": ".85", "stroke-linecap": "round" }, $("rivers")));
+GEO.water.forEach(([n, x, y, a]) => { const t = el("text", { class: "wlabel", x, y, transform: `rotate(${a} ${x} ${y})`, "text-anchor": "middle" }, $("waterlabels")); t.textContent = n; });
+GEO.lakeNames.forEach(([n, x, y]) => { const t = el("text", { class: "wlabel", x, y, "text-anchor": "middle" }, $("waterlabels")); t.textContent = n; });
+
+const regionEls = {}, labelEls = {}, placeEls = {}, arrowEls = {};
+Object.entries(REG).forEach(([id, r]) => {
+  const key = r.key || id;
+  const g = el("g", { class: "region", opacity: 0 }, $("regions"));
+  el("path", { d: GEO.regions[key], fill: r.c, "fill-opacity": ".45", filter: "url(#soft)" }, g);
+  el("path", { d: GEO.regions[key], fill: r.c, "fill-opacity": ".10", stroke: r.c, "stroke-opacity": ".55", "stroke-width": "1.2", "stroke-dasharray": "5 5" }, g);
+  regionEls[id] = g;
+  const [x, y] = GEO.labels[key];
+  const t = el("text", { class: "rlabel", x, y, "text-anchor": "middle", opacity: 0 }, $("labels"));
+  t.textContent = r.n; labelEls[id] = t;
+});
+Object.entries(PLACES).forEach(([id, name]) => {
+  const [x, y] = GEO.places[id];
+  const g = el("g", { class: "place", opacity: 0 }, $("places"));
+  el("circle", { class: "ring", cx: x, cy: y, r: 7, fill: "none", stroke: "#F0CE82", "stroke-width": "1.5" }, g);
+  el("circle", { cx: x, cy: y, r: 4.2, fill: "#F0CE82", stroke: "#121316", "stroke-width": "1.5" }, g);
+  const anchorEnd = ["otrar", "turkestan"].includes(id);
+  const t = el("text", { class: "plabel", x: anchorEnd ? x - 10 : x + 10, y: y + 4, "text-anchor": anchorEnd ? "end" : "start" }, g);
+  t.textContent = name; placeEls[id] = g;
+});
+Object.entries(GEO.arrows).forEach(([id, d]) => {
+  const g = el("g", { opacity: 0 }, $("arrows"));
+  const flow = el("path", { d, class: "flow", stroke: "#fff" }, g);
+  const p = el("path", { d, class: "arrow", "marker-end": "url(#ah)" }, g);
+  const labels = (GEO.alabels[id] || []).map(([txt, x, y, a]) => { const t = el("text", { class: "alabel", x, y, "text-anchor": a }, g); t.textContent = txt; return t; });
+  arrowEls[id] = { g, p, flow, labels };
+});
+
+// ---- timeline
+const tl = $("timeline");
+const stops = ERAS.map((e, i) => {
+  const b = document.createElement("button");
+  b.className = "tstop"; b.type = "button"; b.setAttribute("role", "tab");
+  b.innerHTML = `<span class="pip"></span><span class="nm">${e.nm}</span><span class="dt">${e.dt}</span>`;
+  b.addEventListener("click", () => { stop(); go(i); });
+  tl.appendChild(b); return b;
+});
+
+let cur = -1;
+function swap(node, fn) { node.classList.add("out"); setTimeout(() => { fn(); node.classList.remove("out"); }, 260); }
+function go(i) {
+  i = (i + ERAS.length) % ERAS.length;
+  if (i === cur) return;
+  cur = i; const e = ERAS[i];
+  document.documentElement.style.setProperty("--acc", e.acc);
+  const active = new Set(e.reg);
+  Object.entries(regionEls).forEach(([id, g]) => g.setAttribute("opacity", active.has(id) ? 1 : 0));
+  Object.entries(labelEls).forEach(([id, t]) => t.setAttribute("opacity", active.has(id) ? 1 : 0));
+  Object.entries(placeEls).forEach(([id, g]) => g.setAttribute("opacity", e.pl.includes(id) ? 1 : 0));
+  Object.entries(arrowEls).forEach(([id, a]) => {
+    if (id === e.arrow) {
+      a.g.setAttribute("opacity", 1);
+      a.p.setAttribute("stroke", e.arrowC); a.flow.setAttribute("stroke", e.arrowC); a.labels.forEach((t) => t.setAttribute("fill", e.arrowC));
+      const len = a.p.getTotalLength(); a.p.style.setProperty("--len", len);
+      a.p.style.strokeDasharray = len; a.p.style.strokeDashoffset = len;
+      a.p.classList.remove("draw"); void a.p.getBBox(); a.p.classList.add("draw");
+    } else a.g.setAttribute("opacity", 0);
+  });
+  swap($("stampYrs"), () => $("stampYrs").textContent = e.yrs);
+  swap($("stampTtl"), () => $("stampTtl").textContent = e.ttl);
+  swap($("pBody"), () => {
+    $("pWho").innerHTML = e.reg.map((id) => `<span class="chip"><i style="background:${REG[id].c};color:${REG[id].c}"></i>${REG[id].n}</span>`).join("");
+    $("pTxt").textContent = e.txt;
+  });
+  swap($("pSrcWrap"), () => { $("pSrc").innerHTML = e.src.map((s) => `<li>${s}</li>`).join(""); });
+  swap($("pDna"), () => $("pDna").textContent = e.dtx);
+  $("gdot").style.left = (e.dna * 100) + "%";
+  stops.forEach((s, k) => { s.classList.toggle("on", k === i); s.classList.toggle("done", k < i); s.setAttribute("aria-selected", k === i); });
+  $("tfill").style.width = (i / (ERAS.length - 1)) * 100 * ((ERAS.length - 1) / ERAS.length) + (50 / ERAS.length) + "%";
+}
+
+// ---- autoplay
+const DUR = window.__DUR || 9000; let playing = false, t0 = 0, raf = 0;
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function tick(now) {
+  if (!playing) return;
+  const k = Math.min(1, (now - t0) / DUR);
+  $("prog").style.width = (k * 100) + "%";
+  if (k >= 1) {
+    if (cur >= ERAS.length - 1) { stop(); return; }
+    go(cur + 1); t0 = now;
+  }
+  raf = requestAnimationFrame(tick);
+}
+function play() {
+  if (cur >= ERAS.length - 1) go(0);
+  playing = true; t0 = performance.now(); $("play").textContent = "❚❚ Пауза";
+  raf = requestAnimationFrame(tick);
+}
+function stop() { playing = false; cancelAnimationFrame(raf); $("prog").style.width = "0%"; $("play").textContent = "▶ Запустить историю"; }
+$("play").addEventListener("click", () => playing ? stop() : play());
+$("prev").addEventListener("click", () => { stop(); go(cur - 1); });
+$("next").addEventListener("click", () => { stop(); go(cur + 1); });
+document.addEventListener("keydown", (ev) => {
+  if (ev.target.closest && ev.target.closest("input,textarea")) return;
+  const mapVisible = $("map").getBoundingClientRect().bottom > 120;
+  if (!mapVisible) return;
+  if (ev.key === "ArrowRight") { ev.preventDefault(); stop(); go(cur + 1); }
+  else if (ev.key === "ArrowLeft") { ev.preventDefault(); stop(); go(cur - 1); }
+  else if (ev.key === " ") { ev.preventDefault(); playing ? stop() : play(); }
+});
+go(0);
+
+// ---- finale streams
+(function () {
+  const items = [["Саки", C.saka], ["Усуни", C.usun], ["Канглы", C.kangju], ["Гунны", C.hun], ["Тюрки", C.turk], ["Кыпчаки", C.kypchak], ["Монгольские роды", C.mogol]];
+  const g = $("streams"), n = items.length, top = 40, gap = (460 - 2 * top) / (n - 1);
+  items.forEach(([name, col], i) => {
+    const y = top + i * gap;
+    const d = `M260 ${y} C 560 ${y}, 640 230, 930 230`;
+    el("path", { d, fill: "none", stroke: col, "stroke-width": 7, "stroke-opacity": ".35", "stroke-linecap": "round" }, g);
+    el("path", { d, class: "flow", stroke: col, style: "opacity:.95;stroke-width:3;animation-duration:" + (1 + i * .12) + "s" }, g);
+    el("circle", { cx: 260, cy: y, r: 7, fill: col }, g);
+    const t = el("text", { x: 244, y: y + 8, "text-anchor": "end", class: "fname", fill: col }, g);
+    t.textContent = name;
+  });
+})();
+</script>
+
+</body>
+</html>
